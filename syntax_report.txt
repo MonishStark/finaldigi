@@ -1,0 +1,3 @@
+Scanning c:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\tests\smoke...
+
+✅ No brace/parenthesis balance errors found.

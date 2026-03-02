@@ -1,0 +1,74 @@
+﻿Columns in users table: {
+  "id": {
+    "defaultValue": null,
+    "type": "bigint",
+    "maxLength": null,
+    "nullable": false
+  },
+  "firstname": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 100,
+    "nullable": false
+  },
+  "lastname": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 100,
+    "nullable": false
+  },
+  "email": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 100,
+    "nullable": false
+  },
+  "mobileCountryCode": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 10,
+    "nullable": true
+  },
+  "mobileNumber": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 20,
+    "nullable": false
+  },
+  "password": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 1000,
+    "nullable": false
+  },
+  "accountStatus": {
+    "defaultValue": null,
+    "type": "tinyint",
+    "maxLength": null,
+    "nullable": false
+  },
+  "token": {
+    "defaultValue": null,
+    "type": "bigint",
+    "maxLength": null,
+    "nullable": true
+  },
+  "token_issued": {
+    "defaultValue": null,
+    "type": "varchar",
+    "maxLength": 50,
+    "nullable": true
+  },
+  "created": {
+    "defaultValue": "current_timestamp()",
+    "type": "timestamp",
+    "maxLength": null,
+    "nullable": false
+  },
+  "updated": {
+    "defaultValue": "current_timestamp()",
+    "type": "timestamp",
+    "maxLength": null,
+    "nullable": false
+  }
+}

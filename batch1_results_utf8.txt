@@ -1,0 +1,630 @@
+﻿
+Running 706 tests using 1 worker
+
+[1A[2K[1/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:19:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should fetch application data successfully
+[1A[2K[2/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:40:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 for malformed query input
+[1A[2K[3/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:55:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 401 Unauthorized Responses ΓÇ║ should return 401 when authentication is missing
+[1A[2K[4/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:72:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 404 Not Found Responses ΓÇ║ should return 404 when route variant does not exist
+[1A[2K  1) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:72:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 404 Not Found Responses ΓÇ║ should return 404 when route variant does not exist 
+
+    SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+
+      73 | 			const response = await request.get(`${API_BASE_URL}/app-data/non-existent`);
+      74 | 			if (response.status() !== 404) return;
+    > 75 | 			const data = await response.json();
+         | 			             ^
+      76 | 			expect(data.success).toBe(false);
+      77 | 			expect(data.error).toBe("not_found");
+      78 | 			expect(data.message).toBe("Application data is unavailable");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:75:17
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-e3b52-oute-variant-does-not-exist-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-e3b52-oute-variant-does-not-exist-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[5/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:87:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ 429 Rate Limit Responses ΓÇ║ should return 429 when rate limit exceeded
+[1A[2K[6/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:120:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle concurrent requests
+[1A[2K  2) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:120:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle concurrent requests 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      126 |
+      127 | 			responses.forEach((response) => {
+    > 128 | 				expect([200, 400, 401, 404]).toContain(response.status());
+          | 				                             ^
+      129 | 			});
+      130 | 		});
+      131 |
+
+        at forEach (C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:128:34)
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:127:14
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-16f88--handle-concurrent-requests-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-16f88--handle-concurrent-requests-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[7/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:132:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle request with headers
+[1A[2K  3) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:132:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle request with headers 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      137 | 			});
+      138 |
+    > 139 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      140 | 		});
+      141 |
+      142 | 		test("should handle request with user agent", async ({ request }) => {
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:139:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-95f9a-handle-request-with-headers-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-95f9a-handle-request-with-headers-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[8/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:142:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle request with user agent
+[1A[2K  4) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:142:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle request with user agent 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      147 | 			});
+      148 |
+    > 149 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      150 | 		});
+      151 |
+      152 | 		test("should handle OPTIONS request", async ({ request }) => {
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:149:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-aa5fa-dle-request-with-user-agent-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-aa5fa-dle-request-with-user-agent-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[9/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:152:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle OPTIONS request
+[1A[2K[10/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:160:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle HEAD request
+[1A[2K  5) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:160:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle HEAD request 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 401, 404, 405][39m
+
+      163 | 			});
+      164 |
+    > 165 | 			expect([200, 401, 404, 405]).toContain(response.status());
+          | 			                             ^
+      166 | 		});
+      167 | 	});
+      168 |
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:165:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-7a34c--should-handle-HEAD-request-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-7a34c--should-handle-HEAD-request-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[11/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:174:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should not expose sensitive data in response
+[1A[2K[12/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:189:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should prevent SQL injection attempts
+[1A[2K  6) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:189:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should prevent SQL injection attempts 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      192 | 			);
+      193 |
+    > 194 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      195 | 		});
+      196 |
+      197 | 		test("should handle XSS attempts", async ({ request }) => {
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:194:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-3c2d6-vent-SQL-injection-attempts-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-3c2d6-vent-SQL-injection-attempts-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[13/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:197:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should handle XSS attempts
+[1A[2K  7) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:197:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should handle XSS attempts 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      200 | 			);
+      201 |
+    > 202 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      203 | 		});
+      204 |
+      205 | 		test("should be accessible without authentication", async ({ request }) => {
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:202:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-498d0--should-handle-XSS-attempts-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-498d0--should-handle-XSS-attempts-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[14/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:205:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should be accessible without authentication
+[1A[2K  8) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:205:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should be accessible without authentication 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      206 | 			const response = await request.get(`${API_BASE_URL}/app-data`);
+      207 |
+    > 208 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      209 | 		});
+      210 | 	});
+      211 |
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:208:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-35d89-ible-without-authentication-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-35d89-ible-without-authentication-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[15/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:217:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should return consistent success structure
+[1A[2K[16/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:229:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should return proper content type
+[1A[2K[17/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:239:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should include standard response headers
+[1A[2K[18/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:252:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Performance Tests ΓÇ║ should respond quickly (< 500ms)
+[1A[2K  9) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:252:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Performance Tests ΓÇ║ should respond quickly (< 500ms) 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      257 | 			const duration = Date.now() - start;
+      258 |
+    > 259 | 			expect([200, 400, 401, 404]).toContain(response.status());
+          | 			                             ^
+      260 | 			expect(duration).toBeLessThan(500);
+      261 | 		});
+      262 |
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:259:33
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-0c087-ould-respond-quickly-500ms--chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-0c087-ould-respond-quickly-500ms--chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[19/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:263:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Performance Tests ΓÇ║ should handle concurrent requests efficiently
+[1A[2K  10) [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:263:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Performance Tests ΓÇ║ should handle concurrent requests efficiently 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected value: [32m500[39m
+    Received array: [31m[200, 400, 401, 404][39m
+
+      274 |
+      275 | 			responses.forEach((response) => {
+    > 276 | 				expect([200, 400, 401, 404]).toContain(response.status());
+          | 				                             ^
+      277 | 			});
+      278 |
+      279 | 			expect(duration).toBeLessThan(2000);
+
+        at forEach (C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:276:34)
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\app_data_get_comprehensive.spec.ts:275:14
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-app_data-248b2-urrent-requests-efficiently-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-app_data-248b2-urrent-requests-efficiently-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[20/706] [chromium] ΓÇ║ smoke-tests\specs\app_data_get_comprehensive.spec.ts:282:7 ΓÇ║ GET /app-data - Comprehensive Tests ΓÇ║ Performance Tests ΓÇ║ should support caching for performance
+[1A[2K[21/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:27:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should return exists: true for existing email - 200
+[1A[2K[22/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:44:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should return exists: false for non-existing email - 200
+[1A[2K[23/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:63:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should handle multiple existing users correctly
+[1A[2K[24/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:91:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should handle case-insensitive email check
+[1A[2K[25/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:108:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should handle mixed case email check
+[1A[2K[26/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:131:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is missing
+[1A[2K  11) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:131:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is missing 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"bad_request"[39m
+    Received: [31mundefined[39m
+
+      139 | 			const data = await response.json();
+      140 | 			expect(data.success).toBe(false);
+    > 141 | 			expect(data.error).toBe("bad_request");
+          | 			                   ^
+      142 | 			expect(data.message).toBe("Invalid or missing email");
+      143 | 			expect(data.details).toBeDefined();
+      144 | 			expect(Array.isArray(data.details)).toBe(true);
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:141:23
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-a20b6-n-400-when-email-is-missing-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-a20b6-n-400-when-email-is-missing-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[27/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:150:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is empty string
+[1A[2K  12) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:150:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is empty string 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"bad_request"[39m
+    Received: [31mundefined[39m
+
+      162 | 			const data = await response.json();
+      163 | 			expect(data.success).toBe(false);
+    > 164 | 			expect(data.error).toBe("bad_request");
+          | 			                   ^
+      165 | 			expect(data.message).toBe("Invalid or missing email");
+      166 | 			expect(data.details).toBeDefined();
+      167 | 			expect(Array.isArray(data.details)).toBe(true);
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:164:23
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-eb572--when-email-is-empty-string-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-eb572--when-email-is-empty-string-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[28/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:173:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is null
+[1A[2K  13) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:173:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is null 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"bad_request"[39m
+    Received: [31mundefined[39m
+
+      183 | 			const data = await response.json();
+      184 | 			expect(data.success).toBe(false);
+    > 185 | 			expect(data.error).toBe("bad_request");
+          | 			                   ^
+      186 | 			expect(data.message).toBe("Invalid or missing email");
+      187 | 			expect(data.details).toBeDefined();
+      188 | 			expect(Array.isArray(data.details)).toBe(true);
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:185:23
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-a47e9-turn-400-when-email-is-null-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-a47e9-turn-400-when-email-is-null-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[29/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:194:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is undefined
+[1A[2K  14) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:194:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 when email is undefined 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"bad_request"[39m
+    Received: [31mundefined[39m
+
+      204 | 			const data = await response.json();
+      205 | 			expect(data.success).toBe(false);
+    > 206 | 			expect(data.error).toBe("bad_request");
+          | 			                   ^
+      207 | 			expect(data.message).toBe("Invalid or missing email");
+      208 | 			expect(data.details).toBeDefined();
+      209 | 			expect(Array.isArray(data.details)).toBe(true);
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:206:23
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-9077a-400-when-email-is-undefined-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-9077a-400-when-email-is-undefined-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[30/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:215:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 for invalid email format
+[1A[2K  15) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:215:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should return 400 for invalid email format 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m400[39m
+    Received: [31m200[39m
+
+      221 | 			});
+      222 |
+    > 223 | 			expect(response.status()).toBe(400);
+          | 			                          ^
+      224 | 			const data = await response.json();
+      225 | 			expect(data.success).toBe(false);
+      226 | 			expect(data.error).toBe("bad_request");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:223:30
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-1b3fd-00-for-invalid-email-format-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-1b3fd-00-for-invalid-email-format-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[31/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:234:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should validate email format with multiple invalid examples
+[1A[2K  16) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:234:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 400 Bad Request Responses ΓÇ║ should validate email format with multiple invalid examples 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m400[39m
+    Received: [31m200[39m
+
+      253 | 				);
+      254 |
+    > 255 | 				expect(response.status()).toBe(400);
+          | 				                          ^
+      256 | 				const data = await response.json();
+      257 | 				expect(data.success).toBe(false);
+      258 | 				expect(data.error).toBe("bad_request");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:255:31
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-0aae8-h-multiple-invalid-examples-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-0aae8-h-multiple-invalid-examples-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[32/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:273:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for GET method
+[1A[2K  17) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:273:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for GET method 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m405[39m
+    Received: [31m404[39m
+
+      275 | 				headers: { "Content-Type": "application/json" },
+      276 | 			});
+    > 277 | 			expect(response.status()).toBe(405);
+          | 			                          ^
+      278 | 			const data = await response.json();
+      279 | 			expect(data.success).toBe(false);
+      280 | 			expect(data.error).toBe("method_not_allowed");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:277:30
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-321c5-d-return-405-for-GET-method-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-321c5-d-return-405-for-GET-method-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[33/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:285:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for PUT method
+[1A[2K  18) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:285:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for PUT method 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m405[39m
+    Received: [31m404[39m
+
+      288 | 				data: { email: "test@example.com" },
+      289 | 			});
+    > 290 | 			expect(response.status()).toBe(405);
+          | 			                          ^
+      291 | 			const data = await response.json();
+      292 | 			expect(data.success).toBe(false);
+      293 | 			expect(data.error).toBe("method_not_allowed");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:290:30
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-f4cb4-d-return-405-for-PUT-method-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-f4cb4-d-return-405-for-PUT-method-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[34/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:298:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for DELETE method
+[1A[2K  19) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:298:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 405 Method Not Allowed Responses ΓÇ║ should return 405 for DELETE method 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m405[39m
+    Received: [31m404[39m
+
+      303 | 				},
+      304 | 			);
+    > 305 | 			expect(response.status()).toBe(405);
+          | 			                          ^
+      306 | 			const data = await response.json();
+      307 | 			expect(data.success).toBe(false);
+      308 | 			expect(data.error).toBe("method_not_allowed");
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:305:30
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-a271f-eturn-405-for-DELETE-method-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-a271f-eturn-405-for-DELETE-method-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[35/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:319:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 429 Rate Limit Responses ΓÇ║ should return 429 after multiple rapid email checks
+[1A[2K  20) [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:319:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 429 Rate Limit Responses ΓÇ║ should return 429 after multiple rapid email checks 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      341 | 			// Should trigger at least one rate limit (429) response
+      342 | 			const has429 = statuses.some((s) => s === 429);
+    > 343 | 			expect(has429).toBe(true);
+          | 			               ^
+      344 |
+      345 | 			const rateLimited = responses.find((r) => r.status() === 429);
+      346 | 			expect(rateLimited).toBeDefined();
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_email_check_comprehensive.spec.ts:343:19
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_ema-061e5-multiple-rapid-email-checks-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_ema-061e5-multiple-rapid-email-checks-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[36/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:355:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 429 Rate Limit Responses ΓÇ║ should return 429 with proper error structure
+[1A[2K[37/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:390:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 429 Rate Limit Responses ΓÇ║ should rate limit based on IP/user across multiple emails
+[1A[2K[38/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:435:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ 500 Server Error Responses ΓÇ║ should handle server errors gracefully
+[1A[2K[39/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:463:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle email with special characters
+[1A[2K[40/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:489:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle very long valid email addresses
+[1A[2K[41/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:507:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle unicode characters in email
+[1A[2K[42/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:522:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle concurrent requests for same email
+[1A[2K[43/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:552:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle concurrent requests for different emails
+[1A[2K[44/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:585:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle whitespace in email
+[1A[2K[45/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:600:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Edge Cases ΓÇ║ should handle email with dots at beginning or end
+[1A[2K[46/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:634:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should not expose sensitive information in response
+[1A[2K[47/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:655:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should not reveal user details even for existing emails
+[1A[2K[48/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:674:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should have consistent response times
+[1A[2K[49/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:700:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should handle SQL injection attempts safely
+[1A[2K[50/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:730:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should handle XSS attempts safely
+[1A[2K[51/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:759:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Security Tests ΓÇ║ should not allow email enumeration through response differences
+[1A[2K[52/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:793:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should return consistent response structure
+[1A[2K[53/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:810:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should return proper content type
+[1A[2K[54/706] [chromium] ΓÇ║ smoke-tests\specs\auth_email_check_comprehensive.spec.ts:820:7 ΓÇ║ POST /auth/email/check - Comprehensive Tests ΓÇ║ Response Format Tests ΓÇ║ should return meaningful messages for errors
+[1A[2K[55/706] [chromium] ΓÇ║ smoke-tests\specs\auth_login_comprehensive.spec.ts:19:7 ΓÇ║ POST /auth/login - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should successfully login with valid credentials
+[1A[2K  21) [chromium] ΓÇ║ smoke-tests\specs\auth_login_comprehensive.spec.ts:19:7 ΓÇ║ POST /auth/login - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should successfully login with valid credentials 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"[7mLogi[27mn [7ms[27muccess[7mful[27m"[39m
+    Received: [31m"[7mAuthenticatio[27mn [7mS[27muccess"[39m
+
+      31 | 			const data = await response.json();
+      32 | 			expect(data.success).toBe(true);
+    > 33 | 			expect(data.message).toBe("Login successful");
+         | 			                     ^
+      34 | 			expect(data.user).toBeDefined();
+      35 | 			expect(data.user.email).toBe(testData.users.admin1.email);
+      36 | 			expect(data.user.auth).toBeDefined();
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_login_comprehensive.spec.ts:33:25
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_log-5a10a-ogin-with-valid-credentials-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_log-5a10a-ogin-with-valid-credentials-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+
+[1A[2K[56/706] [chromium] ΓÇ║ smoke-tests\specs\auth_login_comprehensive.spec.ts:42:7 ΓÇ║ POST /auth/login - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should handle admin2 login
+[1A[2K  22) [chromium] ΓÇ║ smoke-tests\specs\auth_login_comprehensive.spec.ts:42:7 ΓÇ║ POST /auth/login - Comprehensive Tests ΓÇ║ 200 Success Responses ΓÇ║ should handle admin2 login 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32m"[7mLogi[27mn [7ms[27muccess[7mful[27m"[39m
+    Received: [31m"[7mAuthenticatio[27mn [7mS[27muccess"[39m
+
+      52 | 			const data = await response.json();
+      53 | 			expect(data.success).toBe(true);
+    > 54 | 			expect(data.message).toBe("Login successful");
+         | 			                     ^
+      55 | 		});
+      56 |
+      57 | 		test("should handle superadmin login", async ({ request }) => {
+
+        at C:\Users\Dhanush\Desktop\Digibot\digibot - Copy - Copy - Copy\e2e\smoke-tests\specs\auth_login_comprehensive.spec.ts:54:25
+
+    attachment #1: trace (application/zip) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+    test-results\smoke-tests-specs-auth_log-ddb72--should-handle-admin2-login-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\smoke-tests-specs-auth_log-ddb72--should-handle-admin2-login-chromium\trace.zip
+
+    ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+

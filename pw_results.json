@@ -1,0 +1,70 @@
+{
+  "config": {
+    "configFile": "C:\\Users\\Dhanush\\Desktop\\Digibot\\digibot - Copy - Copy - Copy\\e2e\\playwright.config.ts",
+    "rootDir": "C:/Users/Dhanush/Desktop/Digibot/digibot - Copy - Copy - Copy/e2e",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "C:\\Users\\Dhanush\\Desktop\\Digibot\\digibot - Copy - Copy - Copy\\e2e\\global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 15000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/Dhanush/Desktop/Digibot/digibot - Copy - Copy - Copy/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/Dhanush/Desktop/Digibot/digibot - Copy - Copy - Copy/e2e",
+        "testIgnore": [
+          "smoke-tests/specs/_deprecated/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "version": "1.48.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Backend not reachable for smoke tests.\nExpected API at: http://127.0.0.1:5050\nTried: GET http://127.0.0.1:5050/health for 60000ms\nStart your backend separately, then re-run:\n  set API_URL=http://127.0.0.1:5050 ; npm test -- --project=chromium smoke-tests/specs",
+      "stack": "Error: Backend not reachable for smoke tests.\nExpected API at: http://127.0.0.1:5050\nTried: GET http://127.0.0.1:5050/health for 60000ms\nStart your backend separately, then re-run:\n  set API_URL=http://127.0.0.1:5050 ; npm test -- --project=chromium smoke-tests/specs\n    at globalSetup (C:\\Users\\Dhanush\\Desktop\\Digibot\\digibot - Copy - Copy - Copy\\e2e\\global-setup.ts:39:8)",
+      "location": {
+        "file": "C:\\Users\\Dhanush\\Desktop\\Digibot\\digibot - Copy - Copy - Copy\\e2e\\global-setup.ts",
+        "column": 8,
+        "line": 39
+      },
+      "snippet": "   at global-setup.ts:39\n\n\u001b[0m \u001b[90m 37 |\u001b[39m \t}\n \u001b[90m 38 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 39 |\u001b[39m \t\u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\n \u001b[90m    |\u001b[39m \t      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 40 |\u001b[39m \t\t[\n \u001b[90m 41 |\u001b[39m \t\t\t\u001b[32m`Backend not reachable for smoke tests.`\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 42 |\u001b[39m \t\t\t\u001b[32m`Expected API at: ${apiUrl}`\u001b[39m\u001b[33m,\u001b[39m\u001b[0m"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-02-27T07:24:43.786Z",
+    "duration": 60648.269,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

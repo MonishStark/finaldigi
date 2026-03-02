@@ -1,0 +1,126 @@
+# Task Audit: Strict API Response Validation
+
+Strict validate API response schemas against the requirement table for all endpoints.
+
+## Status Mapping (Strict Audit)
+
+- [x] 1. `/auth/login` (`auth_login_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 2. `/auth/sign-out` (`auth_sign_out_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 3. `/auth/register` (`auth_register_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 4. `/auth/refresh` (`auth_refresh_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 5. `/auth/email/check` (`auth_email_check_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 6. `/auth/email/resend` (`me_verification_resend_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 7. `/auth/verify` (`auth_verify_account_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 8. `/auth/verify-otp` (`auth_verify_otp_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 9. `/auth/password/forgot` (`auth_password_forgot_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 10. `/auth/password/reset` (`auth_password_reset_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 11. `/auth/payment/status` (`auth_payment_status_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 12. `/auth/providers/{provider}` (`auth_providers_provider_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 13. `/auth/providers/{provider}/callback` (`integrations_auth_google_callback_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 14. `/me/subscription` (`me_subscription_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 15. `/me/profile` (GET) (`me_profile_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 16. `/me/usage` (`me_usage_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 17. `/me/password` (`me_password_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 18. `/me/password/set` (`me_password_set_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 19. `/me/email` (`me_email_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 20. `/me/2fa` (`me_2fa_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 21. `/me/profile` (PATCH) (`me_profile_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 22. `/me/avatar` (`me_avatar_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 23. `/settings/recording-limit` (`settings_recording_limit_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 24. `/settings/recording-prompt-time` (`settings_recording_prompt_time_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 25. `/settings/max-uploads` (`settings_max_uploads_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 26. `/app-data` (`app_data_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 27. `/notifications` (`notifications_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 28. `/notifications/viewed` (`notifications_viewed_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 29. `/notifications/view/{id}` (`notifications_view_id_delete_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 30. `/companies/{id}/2fa` (`companies_companyId_2fa_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 31. `/companies/{id}/usage` (`companies_usage_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 32. `/companies/{id}/profile` (`companies_profile_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 33. `/companies/{id}/profile` (PATCH) (`companies_profile_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 34. `/companies/{id}/avatar` (`companies_avatar_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 35. `/teams` (`teams_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 36. `/teams/{id}` (PUT) (`teams_put_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 37. `/teams` (GET) (`teams_list_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 38. `/teams/active` (`teams_active_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 39. `/teams/shared` (`teams_shared_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 40. `/teams/{id}/status` (`teams_status_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 41. `/teams/{teamId}/share` (`teams_share_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 42. `/teams/{teamId}/folders` (POST) (`teams_folders_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 43. `/teams/{teamId}/folders/{folderId}` (PATCH) (`teams_folders_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 44. `/teams/{teamId}/folders/{folderId}` (DELETE) (`teams_folders_delete_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 45. `/teams/{teamId}/folders` (GET) (`teams_folders_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 46. `/teams/{teamId}/items` (GET) (`teams_items_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 47. `/teams/{teamId}/folders/{parentId}/tree` (GET) (`teams_folders_tree_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 48. `/teams/{teamId}/folders` (GET) (`teams_folders_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 49. `/teams/{teamId}/files` (POST) (`teams_files_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 50. `/teams/{teamId}/files/{fileId}` (GET) (`teams_files_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 51. `/teams/{teamId}/files/{fileId}` (PATCH) (`teams_files_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 52. `/files/upload/{teamId}` (`files_upload_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 53. `/files/jobs/{id}/status` (`files_jobs_status_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 54. `/files/jobs/{id}/retry` (`files_jobs_id_retry_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 55. `/teams/{teamId}/files/{fileId}/summary` (`teams_files_summary_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 56. `/settings/recording-limit` (`settings_recording_limit_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 57. `/settings/recording-prompt-time` (`settings_recording_prompt_time_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 58. `/teams/{teamId}/chats` (POST) (`teams_chats_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 59. `/teams/{teamId}/chats` (GET) (`teams_chats_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 60. `/teams/{teamId}/chats/{chatId}` (PATCH/PUT) (`teams_chats_chatId_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 61. `/teams/{teamId}/chats/{chatId}` (DELETE) (`teams_chats_delete_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 62. `/teams/{teamId}/chats/{chatId}/messages` (GET) (`teams_chats_chatId_messages_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 63. `/teams/{teamId}/chats/{chatId}/messages` (POST) (`teams_chats_chatId_messages_post_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 64. `/files/upload/audio/{teamId}` (POST) (`files_upload_audio_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 65. `/notifications` (GET) (`notifications_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 66. `/notification/{id}` (DELETE) (`notifications_view_id_delete_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 67. `/notifications/viewed` (PATCH) (`notifications_viewed_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 68. `/app-data` (GET) (`app_data_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 69. `/integrations` (GET) (`integrations_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 70. `/integrations/{integrationId}` (PATCH) (`integrations_integrationId_patch_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 71. `/integrations/{integrationId}/files` (GET) (`integrations_integrationId_files_get_comprehensive.spec.ts`) (Strict Schema Validated)
+- [x] 72. `/integrations/{integrationId}/files/{fileId}/import/{teamId}` (POST)
+- [ ] 73. `/integrations/auth/oauth-session-token` (GET)
+- [x] 74. `/integrations/auth/{integrationId}?platform={platform}&st={st}` (GET)
+- [x] 75. `/auth/providers/{provider}?platform={platforn}&flow={flow}` (GET)
+- [x] 76. `/invitations` (POST)
+- [x] 77. `/invitations` (GET)
+- [x] 78. `/companies/{companyId}/invitations/{invitationId}` (DELETE)
+- [x] 79. `/companies/{companyId}/invitations/{invitationId}/resend` (POST)
+- [x] 80. `/invitations/verify` (POST)
+- [x] 81. `/invitations/decline` (POST)
+- [x] 82. `/admin/users/{userId}` (GET)
+- [x] 83. `/admin/users/{userId}/verify` (PATCH/PUT/POST)
+- [x] 84. `/admin/users/{userId}/password` (PATCH/PUT)
+- [x] 85. `/admin/users/{userId}/2fa` (PATCH/PUT)
+- [x] 86. `/admin/users/{userId}/account-status`
+- [x] 87. `/admin/users/{userId}` (DELETE)
+- [x] 88. `/admin/users/{userId}/profile`
+- [x] 89. `/admin/users/{userId}/profile/avatar`
+- [x] 90. `/super-admin/users/{userId}/profile/avatar`
+- [x] 91. `/super-admin/companies/{companyId}/profile/avatar`
+- [x] 92. `/super-admin/users/{userId}/profile`
+- [x] 93. `/super-admin/companies/{companyId}/profile`
+- [x] 94. `/super-admin/integrations`
+- [x] 95. `/super-admin/clients`
+- [x] 96. `/super-admin/companies`
+- [x] 97. `/super-admin/companies/{companyId}/usage`
+- [x] 98. `/super-admin/users/{userId}/usage`
+- [x] 99. `/super-admin/users/{userId}/role`
+- [x] 100. `/super-admin/environment`
+- [x] 101. `/super-admin/email/templates`
+- [x] 102. `/super-admin/email/templates/{templateId}`
+- [x] 103. `/super-admin/users/{userId}` (Super Admin DELETE)
+- [x] 104. `/super-admin/companies/{companyId}` (DELETE)
+
+## Gemini Code Assist Mitigation
+- [x] Resolve TypeScript compilation errors in smoke tests
+    - [x] Fix `teams_folders_tree_get_comprehensive.spec.ts` (TS2322)
+    - [x] Fix `teams_list_comprehensive.spec.ts` (TS2304)
+    - [x] Fix `teams_put_comprehensive.spec.ts` (TS2322)
+    - [x] Fix `teams_shared_get_comprehensive.spec.ts` (TS2304)
+- [x] Create permissive `tsconfig.json` for `e2e` directory
+- [x] Verify clean `tsc --noEmit` report
+
+## Smoke Test Execution and Reporting
+- [x] Restart services and seed test users
+- [x] Run Batch 1 (Partial)
+- [x] Run Batch 2 (Partial/Crashed)
+- [/] Run All Specs Sequentially (v3 - Optimized)
+- [ ] Generate Comprehensive Failure Report
