@@ -30,3 +30,5 @@ _PR trigger: smoke tests run v5._
 _PR trigger: smoke tests run v4._
 
 _PR trigger: baseline smoke tests run v30._
+
+_PR trigger: baseline smoke tests run v31 (2026-03-02 refresh)._
