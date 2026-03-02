@@ -9,7 +9,7 @@ name: "DigiBot: PR Smoke Tests"
 
 on:
   pull_request:
-    branches: [master, develop]
+    branches-ignore: [master]
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
