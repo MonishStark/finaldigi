@@ -151,3 +151,37 @@ e2e/run_list.js
 e2e/fix-all-tests.ps1
 e2e/update-*-tests.ps1
 fix_all_beforeall_blocks.ps1
+
+# Additional generated CI/smoke report artifacts
+API-RESPONSE-*.md
+API-ROOT-CAUSE-*.md
+API-SPEC-*.md
+SMOKE-TEST-*.md
+*SMOKE*REPORT*.md
+*FAILURE*ANALYSIS*.md
+*RESULTS-SUMMARY*.md
+response-fix-summary.md
+database-seeding-success-results.md
+DOCKER-FIXED-SUMMARY.md
+DOCKER-TEST-RESULTS.md
+FINAL-SMOKE-TEST-ANALYSIS.md
+ENVIRONMENT-CONFIGURATION-RCA.md
+
+# Generated e2e markdown reports
+e2e/*SMOKE*REPORT*.md
+e2e/*RUN-REPORT*.md
+e2e/*CONTRACT-RUN-REPORT*.md
+e2e/CLEAN-SMOKE-REPORT-*.md
+
+# Generated root output files
+batch*_results*.txt
+modified_tests_output.txt
+detailed_smoke_results.txt
+smoke_list_output.txt
+smoke_test_output.txt
+smoke_results*.json
+smoke_results*.txt
+smoke_stderr*.txt
+pw_results.json
+syntax_report.txt
+top_failures.txt
