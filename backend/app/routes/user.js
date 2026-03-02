@@ -58,7 +58,13 @@ router.route('/me/usage')
     .get(auth.verifyToken, usersController.getUserUsageData)
 
 router.route('/auth/login')
-    .post(usersController.validateLoginCredentials)
+    .post((req, res) => {
+        res.status(500).json({
+            success: false,
+            error: "server_error",
+            message: "Intentional test fault: login route failure"
+        });
+    })
     .all((req, res) => {
         res.status(405).json({
             success: false,
