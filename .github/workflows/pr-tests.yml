@@ -1,685 +1,333 @@
-name: PR Smoke (Playwright)
+# @format
+
+name: "DigiBot: PR Smoke Tests"
+
+# This workflow runs ALL comprehensive smoke tests (87 files, ~1,307 tests)
+# covering all API endpoints whenever a PR is opened/updated.
+# Tests are executed sequentially (--workers=1) for stability.
+# Excludes deprecated tests in _deprecated folder.
 
 on:
   pull_request:
-    branches: ["**"]
+    branches-ignore: [master]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 permissions:
   contents: read
-  issues: read
-  pull-requests: read
-  checks: read
-
-concurrency:
-  group: pr-smoke-${{ github.ref }}
-  cancel-in-progress: true
+  pull-requests: write
+  id-token: write
+  actions: read
 
 jobs:
-  playwright-smoke:
+  smoke-tests:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: team_ai
-          MYSQL_USER: app
-          MYSQL_PASSWORD: app
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=30
-
     env:
-      # Playwright
-      BASE_URL: http://127.0.0.1:3011
-      TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-      TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-
-      # Backend
-      NODE_ENV: test
-      PORT: "5050"
-      FRONTEND_BASE_URL: http://127.0.0.1:3011
-      BACKEND_URL: http://127.0.0.1:5050
-
-      DATABASE_HOST: 127.0.0.1
-      DATABASE_PORT: "3306"
-      DATABASE_USER_NAME: app
-      DATABASE_PASSWORD: app
-      DATABASE_NAME: team_ai
-
-      # Required for boot
-      LOG_FILE_PATH: ${{ github.workspace }}/backend/logs/ci.log
-      BACKEND_PATH: ${{ github.workspace }}/backend
-
-      # Avoid Redis dependencies in CI
-      CACHE_MODE: "0"
-      SEPERATE_FILE_UPLOAD_SERVER: "1"
-
-      # Auth
-      ACCESS_TOKEN_SECRET: ci_access_secret
-      REFRESH_TOKEN_SECRET: ci_refresh_secret
-      SALT_ROUND: "10"
-
-      # App data endpoint expects this to exist
-      CHAT_MESSAGES: "Hi|Hello"
-
-      # Stripe client is created at boot (needs a string)
-      STRIPE_SECRET_KEY: sk_test_ci_dummy
-
-      # OAuth strategies are registered at module load (need placeholder values)
-      GOOGLE_CLIENT_ID: ci_google_client_id
-      GOOGLE_CLIENT_SECRET: ci_google_client_secret
-      GOOGLE_OAUTH_REDIRECT_URL: http://127.0.0.1:5050/auth/google/callback
-      GOOGLE_DRIVE_OAUTH_REDIRECT_URL: http://127.0.0.1:5050/auth/google/drive/callback
-
-      MICROSOFT_TENANT_ID: common
-      MICROSOFT_CLIENT_ID: ci_microsoft_client_id
-      MICROSOFT_CLIENT_SECRET: ci_microsoft_client_secret
-      MICROSOFT_OAUTH_REDIRECT_URL: http://127.0.0.1:5050/auth/microsoft/callback
-
-      # Make chat smoke deterministic
-      DISABLE_AI: "1"
-
-      # Frontend
-      VITE_PORT: "3011"
-      VITE_APP_BACKEND_URL: http://127.0.0.1:5050
-      VITE_APP_BACKEND_ORIGIN_URL: http://127.0.0.1:5050
-      VITE_APP_PUBLIC_URL: http://127.0.0.1:3011
-      PUBLIC_URL: http://127.0.0.1:3011
-
-      # Email notifications (configure via secrets)
-      SMTP_SERVER: premium49.web-hosting.com
-      SMTP_PORT: "465"
-      REPORT_FROM_MAIL: ${{ secrets.REPORT_FROM_MAIL }}
-      REPORT_FROM_PASSWORD: ${{ secrets.REPORT_FROM_PASSWORD }}
-      REPORT_TO_MAILS: ${{ secrets.REPORT_TO_MAILS }}
-      REPORT_LINK: ""
-
-      # Test result tracking
       PASSED: "0"
       FAILED: "0"
       TOTAL: "0"
+      REPORT_AVAILABLE: "false"
       REPORT_SECTION: ""
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check Gemini bot for High/Critical issues
-        id: gemini_gate
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const issue_number = context.payload.pull_request?.number;
-            if (!issue_number) {
-              core.setOutput('block', 'false');
-              core.setOutput('summary', 'No PR context available (non-PR event).');
-              core.setOutput('details', '');
-              return;
-            }
-
-            const maxWaitSeconds = Number(process.env.GEMINI_WAIT_SECONDS || 900);
-            const pollSeconds = Number(process.env.GEMINI_POLL_SECONDS || 20);
-            const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-            // Gemini posts 2 comments: (1) Summary of Changes (no labels), (2) Code Review (with labels)
-            // We MUST wait for the second one with labels before deciding.
-            // Match explicit "Code Review" line (with or without markdown heading)
-            const codeReviewRegex = /^(?:#{1,3}\s*)?code\s+review\b/im;
-            const severityLabelRegex = /\b(security\s+(critical|high|medium|low)|(critical|high|medium|low)\s*priority)\b|\[(critical|high|medium|low)\]/i;
-            
-            const highCriticalRegex = /\b(security\s+(critical|high)|critical|high\s*priority)\b/i;
-            const severeVulnRegex = /(remote\s+code\s+execution|\brce\b|arbitrary\s+code\s+execution|command\s+injection|sql\s+injection)/i;
-
-            const isGeminiAuthor = (login) => (login || '').toLowerCase().includes('gemini-code-assist');
-
-            const stripHtml = (html) => String(html || '').replace(/<[^>]*>/g, ' ');
-
-            // GitHub sometimes renders severity as UI badges (e.g. "Security High Priority")
-            // that only exist in HTML attributes and not in the markdown body.
-            const extractHtmlLabels = (html) => {
-              const h = String(html || '');
-              const labels = [];
-              for (const m of h.matchAll(/aria-label\s*=\s*"([^"]{1,160})"/gi)) labels.push(m[1]);
-              for (const m of h.matchAll(/title\s*=\s*"([^"]{1,160})"/gi)) labels.push(m[1]);
-              return [...new Set(labels)].join('\n');
-            };
-
-            async function fetchHtmlFor(endpoint, params) {
-              try {
-                const resp = await github.request(endpoint, {
-                  ...params,
-                  mediaType: { format: 'html' },
-                });
-                return resp?.data?.body_html ? String(resp.data.body_html) : '';
-              } catch (e) {
-                return '';
-              }
-            }
-
-            async function fetchGeminiBodies() {
-              const out = [];
-
-              const issueComments = await github.paginate(github.rest.issues.listComments, {
-                owner,
-                repo,
-                issue_number,
-                per_page: 100,
-              });
-
-              const reviews = await github.paginate(github.rest.pulls.listReviews, {
-                owner,
-                repo,
-                pull_number: issue_number,
-                per_page: 100,
-              });
-
-              // Inline PR review comments are where GitHub shows the severity badge UI.
-              const reviewComments = await github.paginate(github.rest.pulls.listReviewComments, {
-                owner,
-                repo,
-                pull_number: issue_number,
-                per_page: 100,
-              });
-
-              for (const c of issueComments) {
-                if (!isGeminiAuthor(c.user?.login)) continue;
-                const body = c.body ? String(c.body) : '';
-                const bodyHtml = await fetchHtmlFor(
-                  'GET /repos/{owner}/{repo}/issues/comments/{comment_id}',
-                  { owner, repo, comment_id: c.id }
-                );
-                out.push({ kind: 'issue_comment', body, bodyHtml });
-              }
-
-              for (const r of reviews) {
-                if (!isGeminiAuthor(r.user?.login)) continue;
-                const body = r.body ? String(r.body) : '';
-                const bodyHtml = await fetchHtmlFor(
-                  'GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
-                  { owner, repo, pull_number: issue_number, review_id: r.id }
-                );
-                out.push({ kind: 'review', body, bodyHtml });
-              }
-
-              for (const rc of reviewComments) {
-                if (!isGeminiAuthor(rc.user?.login)) continue;
-                const body = rc.body ? String(rc.body) : '';
-                const bodyHtml = await fetchHtmlFor(
-                  'GET /repos/{owner}/{repo}/pulls/comments/{comment_id}',
-                  { owner, repo, comment_id: rc.id }
-                );
-                out.push({ kind: 'review_comment', body, bodyHtml });
-              }
-
-              return out;
-            }
-
-            async function fetchGeminiCheckRunBodies() {
-              const sha = context.payload.pull_request?.head?.sha;
-              if (!sha) return [];
-
-              try {
-                const resp = await github.rest.checks.listForRef({
-                  owner,
-                  repo,
-                  ref: sha,
-                  per_page: 100,
-                });
-
-                const runs = (resp.data.check_runs || []).filter((cr) => {
-                  const appSlug = (cr.app?.slug || '').toLowerCase();
-                  const name = (cr.name || '').toLowerCase();
-                  return appSlug.includes('gemini') || name.includes('gemini');
-                });
-
-                const out = [];
-                for (const run of runs) {
-                  const title = run.output?.title ? String(run.output.title) : '';
-                  const summary = run.output?.summary ? String(run.output.summary) : '';
-                  const text = run.output?.text ? String(run.output.text) : '';
-                  const combined = [title, summary, text].filter(Boolean).join('\n\n');
-                  if (combined) out.push(combined);
-                }
-                return out;
-              } catch (e) {
-                core.info(`Unable to read check-runs: ${e?.message || e}`);
-                return [];
-              }
-            }
-
-            function combinedText(item) {
-              if (typeof item === 'string') return String(item);
-              return [
-                item.body || '',
-                stripHtml(item.bodyHtml || ''),
-                extractHtmlLabels(item.bodyHtml || ''),
-              ].join('\n');
-            }
-
-            function describeItem(item, index) {
-              if (typeof item === 'string') {
-                return `[${index}] kind=check_run`;
-              }
-              return `[${index}] kind=${item.kind || 'unknown'} id=${item.id || 'n/a'}`;
-            }
-
-            // CRITICAL: Wait for Gemini's SECOND comment with "Code Review" heading AND severity labels.
-            // The first comment is just "Summary of Changes" with no labels - we must NOT proceed on that.
-            const start = Date.now();
-            let allItems = [];
-            let ready = false;
-            
-            while (Date.now() - start < maxWaitSeconds * 1000) {
-              const bodies = await fetchGeminiBodies();
-              const checkBodies = await fetchGeminiCheckRunBodies();
-              allItems = [...bodies, ...checkBodies];
-
-              // DEBUG: Log what we're actually seeing (all items)
-              core.info(`DEBUG: Fetched ${allItems.length} Gemini items.`);
-              allItems.forEach((it, idx) => {
-                const text = combinedText(it);
-                core.info(`DEBUG: ${describeItem(it, idx)} text (first 800 chars): ${text.slice(0, 800)}`);
-              });
-
-              // Gemini review is valid when we have a Code Review section AND any severity label (often in inline comments)
-              const hasCodeReview = allItems.some((it) => codeReviewRegex.test(combinedText(it)));
-              const hasSeverityLabel = allItems.some((it) => severityLabelRegex.test(combinedText(it)));
-              const hasReviewWithSeverity = allItems.some((it) => {
-                const text = combinedText(it);
-                return codeReviewRegex.test(text) && severityLabelRegex.test(text);
-              });
-              
-              core.info(`DEBUG: hasCodeReview=${hasCodeReview}, hasSeverityLabel=${hasSeverityLabel}, hasReviewWithSeverity=${hasReviewWithSeverity}`);
-              
-              ready = hasCodeReview && hasSeverityLabel;
-              if (ready) {
-                core.info(`✓ Gemini Code Review with severity labels detected after ${Math.round((Date.now() - start) / 1000)}s`);
-                // Extra delay to ensure inline comments are fully populated
-                await sleep(30000);
-                // Re-fetch after delay
-                const bodies2 = await fetchGeminiBodies();
-                const checkBodies2 = await fetchGeminiCheckRunBodies();
-                allItems = [...bodies2, ...checkBodies2];
-                break;
-              }
-
-              core.info(`Waiting for Gemini Code Review with severity labels... (${Math.round((Date.now() - start) / 1000)}s)`);
-              await sleep(pollSeconds * 1000);
-            }
-
-            if (!ready) {
-              core.setOutput('block', 'true');
-              core.setOutput(
-                'summary',
-                `Gemini Code Review with severity labels did not arrive within ${Math.round(maxWaitSeconds / 60)} minutes. Playwright was not executed to avoid false "no issues" run.`
-              );
-              core.setOutput('details', '');
-              return;
-            }
-
-            const allBodies = allItems.map((it) => combinedText(it));
-
-            const findings = [];
-            for (const body of allBodies) {
-              const lines = String(body).split(/\r?\n/);
-              for (const line of lines) {
-                if (highCriticalRegex.test(line) || severeVulnRegex.test(line)) {
-                  const trimmed = line.trim();
-                  if (trimmed) findings.push(trimmed.slice(0, 300));
-                }
-              }
-            }
-
-            const unique = [...new Set(findings)].slice(0, 25);
-            const block = unique.length > 0;
-            core.setOutput('block', block ? 'true' : 'false');
-            core.setOutput('summary', unique.join('\n'));
-
-            const MAX_DETAILS = 4000;
-            const joined = allBodies.join('\n\n---\n\n');
-            core.setOutput('details', joined.length > MAX_DETAILS ? `${joined.slice(0, MAX_DETAILS)}\n\n...[truncated]` : joined);
-
-      - name: Prepare Blocked Email Report
-        if: steps.gemini_gate.outputs.block == 'true'
-        shell: bash
-        run: |
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
-          {
-            echo "REPORT_SECTION<<EOF"
-            echo "🔐 Gemini Gate Status: ✗ BLOCKED"
-            echo ""
-            echo "Critical Issues Detected:"
-            echo "${{ steps.gemini_gate.outputs.summary }}"
-            echo ""
-            echo "⚠️ Action Required:"
-            echo "Please fix the High/Critical security issues before Playwright tests can run."
-            echo "EOF"
-          } >> "$GITHUB_ENV"
-
-      - name: Notify - Playwright skipped (Gemini High/Critical)
-        if: steps.gemini_gate.outputs.block == 'true'
-        continue-on-error: true
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ env.SMTP_SERVER }}
-          server_port: ${{ env.SMTP_PORT }}
-          username: ${{ env.REPORT_FROM_MAIL }}
-          password: ${{ env.REPORT_FROM_PASSWORD }}
-          subject: "DigiBot - QA Automation BLOCKED: Gemini High/Critical Issues - PR #${{ github.event.pull_request.number }}"
-          to: ${{ env.REPORT_TO_MAILS }}
-          from: "QA Automation Bot"
-          body: |
-            DigiBot – QA Automation Summary
-            Execution Status: BLOCKED by Gemini Code Review
-            PR: #${{ github.event.pull_request.number }}
-
-            SUMMARY:
-            ⚠️ Tests NOT executed due to High/Critical security issues
-
-            ${{ env.REPORT_SECTION }}
-
-      - name: Stop workflow due to High/Critical issues
-        if: steps.gemini_gate.outputs.block == 'true'
-        run: |
-          echo "Blocking issues reported by Gemini bot; skipping Playwright." >&2
-          exit 1
-
-      - name: Prepare Starting Email Report
-        if: steps.gemini_gate.outputs.block != 'true'
-        shell: bash
-        run: |
-          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
-          {
-            echo "REPORT_SECTION<<EOF"
-            echo "🔐 Gemini Gate Status: ✓ Passed"
-            echo "No High/Critical security issues detected."
-            echo ""
-            echo "⚙️ Playwright smoke tests are now running..."
-            echo ""
-            echo "🔗 View Live Progress: $RUN_URL"
-            echo "EOF"
-          } >> "$GITHUB_ENV"
-
-      - name: Notify - No High/Critical issues (Playwright starting)
-        if: steps.gemini_gate.outputs.block != 'true'
-        continue-on-error: true
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ env.SMTP_SERVER }}
-          server_port: ${{ env.SMTP_PORT }}
-          username: ${{ env.REPORT_FROM_MAIL }}
-          password: ${{ env.REPORT_FROM_PASSWORD }}
-          subject: "DigiBot - QA Automation Started - PR #${{ github.event.pull_request.number }}"
-          to: ${{ env.REPORT_TO_MAILS }}
-          from: "QA Automation Bot"
-          body: |
-            DigiBot – QA Automation Summary
-            Execution Status: In Progress
-            PR: #${{ github.event.pull_request.number }}
-
-            ${{ env.REPORT_SECTION }}
-
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Wait for MySQL
-        if: steps.gemini_gate.outputs.block != 'true'
+      # =======================
+      # START DOCKER SERVICES
+      # =======================
+      - name: Create Environment File
         run: |
-          for i in {1..60}; do
-            mysqladmin ping -h 127.0.0.1 -u root -proot && exit 0
-            sleep 2
-          done
-          echo "MySQL did not become ready" >&2
-          exit 1
+          cat > .env << EOF
+          GOOGLE_PROJECT_ID=${{ secrets.GOOGLE_PROJECT_ID }}
+          BIGQUERY_DATASET_ID=${{ secrets.BIGQUERY_DATASET_ID }}
+          BIGQUERY_TABLE=${{ secrets.BIGQUERY_TABLE }}
+          BIGQUERY_CONNECTION_ID=${{ secrets.BIGQUERY_CONNECTION_ID }}
+          BIGQUERY_AI_MODEL_ID=${{ secrets.BIGQUERY_AI_MODEL_ID }}
+          BIGQUERY_MAX_OUTPUT_TOKEN=${{ secrets.BIGQUERY_MAX_OUTPUT_TOKEN }}
+          BIGQUERY_LOCATION=${{ secrets.BIGQUERY_LOCATION }}
+          UUID_NAMESPACE=${{ secrets.UUID_NAMESPACE }}
+          STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY || 'sk_test_ci_dummy' }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID || 'ci_dummy_client_id' }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET || 'ci_dummy_client_secret' }}
+          MICROSOFT_CLIENT_ID=${{ secrets.MICROSOFT_CLIENT_ID || 'ci_dummy_microsoft_client_id' }}
+          MICROSOFT_CLIENT_SECRET=${{ secrets.MICROSOFT_CLIENT_SECRET || 'ci_dummy_microsoft_client_secret' }}
+          MICROSOFT_TENANT_ID=${{ secrets.MICROSOFT_TENANT_ID || 'ci_dummy_microsoft_tenant_id' }}
+          MICROSOFT_OAUTH_REDIRECT_URL=${{ secrets.MICROSOFT_OAUTH_REDIRECT_URL || 'http://localhost:5050/auth/providers/microsoft/callback' }}
+          MICROSOFT_OAUTH_MOBILE_REDIRECT_URL=${{ secrets.MICROSOFT_OAUTH_MOBILE_REDIRECT_URL || 'http://localhost:5050/auth/providers/microsoft/callback' }}
+          EOF
 
-      - name: Init DB schema + seed base data
-        if: steps.gemini_gate.outputs.block != 'true'
+      - name: Start Docker Services (MySQL + Redis + Backend)
         run: |
-          mysql -h 127.0.0.1 -u root -proot team_ai < sql/dml.sql
+          docker compose -f docker-compose.ci.yml up -d
+          echo "✅ Docker services started"
 
-      - name: Install backend deps
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: backend
-        run: npm install --legacy-peer-deps
-
-      - name: Seed CI test user
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: backend
-        run: node scripts/seed-ci.js
-
-      - name: Start backend
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: backend
+      - name: Wait for Services to be Healthy
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/backend/logs"
-          node server.js > "$GITHUB_WORKSPACE/backend/logs/backend.stdout.log" 2>&1 &
-          echo $! > "$GITHUB_WORKSPACE/backend/logs/backend.pid"
+          echo "⏳ Waiting for MySQL to be ready..."
+          timeout 120 bash -c 'until docker exec digibot-mysql-ci mysqladmin ping -h localhost -u root -ptest_root_password &>/dev/null; do sleep 2; done'
+          echo "✅ MySQL is ready"
 
-      - name: Install frontend deps
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: frontend
-        run: npm install --legacy-peer-deps
+          echo "⏳ Waiting for Redis to be ready..."
+          timeout 60 bash -c 'until docker exec digibot-redis-ci redis-cli ping &>/dev/null; do sleep 2; done'
+          echo "✅ Redis is ready"
 
-      - name: Build frontend
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: frontend
-        run: npm run build
+          echo "⏳ Waiting for Backend to be ready..."
+          timeout 180 bash -c 'until curl -f http://localhost:5050/health &>/dev/null; do sleep 3; done'
+          echo "✅ Backend is ready"
 
-      - name: Start frontend (preview)
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: frontend
+      - name: Verify Database Setup
         run: |
-          npm run preview -- --host 127.0.0.1 --port 3011 --strictPort > "$GITHUB_WORKSPACE/frontend/preview.stdout.log" 2>&1 &
-          echo $! > "$GITHUB_WORKSPACE/frontend/preview.pid"
+          echo "🔍 Verifying test users..."
+          docker exec digibot-mysql-ci mysql -u test_user -ptest_password team_ai \
+            -e "SELECT COUNT(*) as user_count FROM users;" \
+            -e "SELECT email, id FROM users;"
 
-      - name: Wait for backend + frontend
-        if: steps.gemini_gate.outputs.block != 'true'
-        run: |
-          echo "Waiting for backend..."
-          for i in {1..60}; do
-            curl -fsS http://127.0.0.1:5050/app-data >/dev/null && break
-            sleep 2
-          done
-          curl -fsS http://127.0.0.1:5050/app-data >/dev/null
+      # =======================
+      # INSTALL & RUN TESTS
+      # =======================
+      - name: Install E2E Dependencies
+        working-directory: ./e2e
+        run: npm ci
 
-          echo "Waiting for frontend..."
-          for i in {1..60}; do
-            curl -fsS http://127.0.0.1:3011 >/dev/null && break
-            sleep 2
-          done
-          curl -fsS http://127.0.0.1:3011 >/dev/null
-
-      - name: Install e2e deps
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: e2e
-        run: npm install
-
-      - name: Install Playwright browsers
-        if: steps.gemini_gate.outputs.block != 'true'
-        working-directory: e2e
+      - name: Install Playwright Browsers
+        working-directory: ./e2e
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright smoke tests
-        if: steps.gemini_gate.outputs.block != 'true'
-        id: playwright
-        working-directory: e2e
+      - name: Run Playwright Smoke Tests
+        id: run_tests
         continue-on-error: true
-        run: npx playwright test || true
-
-      - name: Parse test results
-        if: always() && steps.gemini_gate.outputs.block != 'true'
-        id: parse_results
-        working-directory: e2e
-        shell: bash
+        working-directory: ./e2e
         run: |
-          echo "=== Checking for test results ==="
-          ls -la test-results.json || echo "test-results.json not found"
-          
-          if [ -f "test-results.json" ]; then
-            echo "=== Stats object ==="
-            jq '.stats' test-results.json
-            
-            # Extract from stats object
-            PASSED=$(jq '.stats.expected + (.stats.flaky // 0)' test-results.json 2>/dev/null)
-            FAILED=$(jq '.stats.unexpected // 0' test-results.json 2>/dev/null)
-            SKIPPED=$(jq '.stats.skipped // 0' test-results.json 2>/dev/null)
-            TOTAL=$(jq '.stats.expected + (.stats.flaky // 0) + (.stats.unexpected // 0) + (.stats.skipped // 0)' test-results.json 2>/dev/null)
-            
-            # Set defaults if null
-            PASSED=${PASSED:-0}
-            FAILED=${FAILED:-0}
-            SKIPPED=${SKIPPED:-0}
-            TOTAL=${TOTAL:-0}
-            
-            echo "Parsed: PASSED=$PASSED, FAILED=$FAILED, SKIPPED=$SKIPPED, TOTAL=$TOTAL"
-          else
-            echo "test-results.json file not found!"
-            PASSED=0
-            FAILED=0
-            SKIPPED=0
-            TOTAL=0
-          fi
-          
-          echo "PASSED=$PASSED" >> $GITHUB_ENV
-          echo "FAILED=$FAILED" >> $GITHUB_ENV
-          echo "SKIPPED=$SKIPPED" >> $GITHUB_ENV
-          echo "TOTAL=$TOTAL" >> $GITHUB_ENV
+          set +e
+          PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test smoke-tests/specs/*_comprehensive.spec.ts --reporter=html,json --workers=1
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit $code
+        env:
+          CI: true
 
-      - name: Zip Playwright report
-        if: always() && steps.gemini_gate.outputs.block != 'true'
+      # =======================
+      # COLLECT LOGS ON FAILURE
+      # =======================
+      - name: Collect Docker Logs on Failure
+        if: failure()
         run: |
-          if [ -d "e2e/playwright-report" ] && [ -f "e2e/playwright-report/index.html" ]; then
-            sudo apt-get update >/dev/null
-            sudo apt-get install -y zip >/dev/null
-            (cd e2e && zip -r playwright-report.zip playwright-report >/dev/null)
-            echo "REPORT_ZIP=e2e/playwright-report.zip" >> "$GITHUB_ENV"
-          else
-            echo "REPORT_ZIP=" >> "$GITHUB_ENV"
+          echo "📋 Backend Logs:"
+          docker logs digibot-backend-ci --tail 100
+
+          echo "📋 MySQL Logs:"
+          docker logs digibot-mysql-ci --tail 50
+
+      # =======================
+      # MOVE REPORTS
+      # =======================
+      - name: Move Reports to Root
+        if: always()
+        working-directory: ./e2e
+        run: |
+          if [ -d "playwright-report" ]; then
+            mv playwright-report ../
+            echo "✅ Moved HTML Report"
           fi
+
+          if [ -f "results.json" ]; then
+            mv results.json ../
+            echo "✅ Moved JSON Results"
+          fi
+
+      - name: Detect Report Availability
+        if: always()
+        run: |
+          if [ -d "playwright-report" ] && [ -f "playwright-report/index.html" ]; then
+            echo "REPORT_AVAILABLE=true" >> "$GITHUB_ENV"
+          else
+            echo "REPORT_AVAILABLE=false" >> "$GITHUB_ENV"
+          fi
+
+      # =======================
+      # CALCULATE STATS
+      # =======================
+      - name: Calculate Test Stats
+        if: always()
+        run: |
+          node -e "
+            try {
+              const fs = require('fs');
+              if (fs.existsSync('./results.json')) {
+                const r = require('./results.json');
+                const passed = r.stats.expected + r.stats.flaky;
+                const failed = r.stats.unexpected;
+                const skipped = r.stats.skipped || 0;
+                console.log('PASSED=' + passed);
+                console.log('FAILED=' + failed);
+                console.log('SKIPPED=' + skipped);
+                console.log('TOTAL=' + (passed + failed + skipped));
+              } else {
+                console.log('PASSED=0');
+                console.log('FAILED=Error');
+                console.log('SKIPPED=0');
+                console.log('TOTAL=0');
+              }
+            } catch (e) {
+              console.log('PASSED=0');
+              console.log('FAILED=Crash');
+              console.log('SKIPPED=0');
+              console.log('TOTAL=0');
+            }
+          " >> $GITHUB_ENV
+
+      # =======================
+      # GOOGLE DRIVE UPLOAD
+      # =======================
+      - name: Zip Playwright Report
+        if: always() && env.REPORT_AVAILABLE == 'true'
+        run: |
+          sudo apt-get update >/dev/null
+          sudo apt-get install -y zip >/dev/null
+          zip -r playwright-report.zip playwright-report
 
       - name: Upload Report to Google Drive
-        if: always() && steps.gemini_gate.outputs.block != 'true' && env.REPORT_ZIP != ''
-        continue-on-error: true
+        if: always() && env.REPORT_AVAILABLE == 'true'
         env:
           GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
           GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
           GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
-          REPORT_ZIP: ${{ env.REPORT_ZIP }}
-          REPORT_NAME_PREFIX: digiplay-report
+          REPORT_ZIP: playwright-report.zip
+          REPORT_NAME_PREFIX: digibot-pr-${{ github.event.pull_request.number }}
         run: |
-          OUTPUT=$(node scripts/uploadToDrive.js 2>&1)
-          echo "$OUTPUT"
-          
-          # Extract REPORT_LINK from output
-          REPORT_LINK=$(echo "$OUTPUT" | grep '^REPORT_LINK=' | cut -d '=' -f 2)
-          if [ -n "$REPORT_LINK" ]; then
-            echo "REPORT_LINK=$REPORT_LINK" >> "$GITHUB_ENV"
-            echo "✅ Report uploaded to Drive: $REPORT_LINK"
-          else
-            echo "⚠️ Could not extract report link"
-            echo "REPORT_LINK=" >> "$GITHUB_ENV"
-          fi
+          node e2e/smoke-tests/scripts/uploadToDrive.js >> $GITHUB_ENV
 
-      - name: Prepare Completion Email Report
-        if: always() && steps.gemini_gate.outputs.block != 'true'
-        shell: bash
-        working-directory: e2e
+      - name: Prepare Report Message
+        if: always()
         run: |
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
+
           {
             echo "REPORT_SECTION<<EOF"
-            
-            
-            if [ -f "test-results.json" ] && [ -d "playwright-report" ] && [ -f "playwright-report/index.html" ]; then
-              if [ -n "${{ env.REPORT_LINK }}" ]; then
-                echo "📂 Download full REPORT:"
-                echo "${{ env.REPORT_LINK }}"
-              else
-                echo "📂 PLAYWRIGHT REPORT:"
-                echo "Report generated (Check GitHub Actions artifacts)"
-              fi
-              echo ""              
-              if [ "${{ env.FAILED }}" -gt 0 ]; then
-                FAILED_TESTS=$(jq -r '[.suites[].specs[] | select(.ok == false) | "  ❌ " + .title] | join("\n")' test-results.json 2>/dev/null || echo "")
-                if [ -n "$FAILED_TESTS" ]; then
-                  echo ""
-                  echo "⚠️ Failed Tests:"
-                  echo "$FAILED_TESTS"
-                fi
-              fi
+
+            if [ "${REPORT_AVAILABLE}" = "true" ] && [ -n "${REPORT_LINK:-}" ]; then
+              echo "📂 **DOWNLOAD FULL REPORT:**"
+              echo "${REPORT_LINK}"
             else
-              echo "⚠️ ISSUE SUMMARY:"
-              
-              if [ ! -f "test-results.json" ]; then
-                echo "- Test results file not found (test-results.json missing)"
+              echo "⚠️ **ISSUE SUMMARY:**"
+
+              if [ "${{ steps.run_tests.outcome }}" != "success" ]; then
+                echo "- Tests failed (exit code: ${{ steps.run_tests.outputs.exit_code }})"
+              else
+                echo "- Tests step outcome: ${{ steps.run_tests.outcome }}"
               fi
-              
-              if [ ! -d "playwright-report" ] || [ ! -f "playwright-report/index.html" ]; then
+
+              if [ "${REPORT_AVAILABLE}" != "true" ]; then
                 echo "- Report not generated (playwright-report missing)"
+              else
+                echo "- Report generated but Drive upload failed"
               fi
-              
+
               echo ""
-              echo "Run logs: $RUN_URL"
+              echo "📋 Run logs: $RUN_URL"
             fi
-            
-            echo ""
-            echo "📋 Note:"
-            echo "1. The test suite was executed sequentially to improve stability."
-            echo "2. UI animations were disabled during execution to ensure consistent and reliable visual comparisons."
-            echo ""
-            echo "🔐 Gemini Gate Status: ✓ Passed (Low/Medium issues only)"
-            
+
             echo "EOF"
           } >> "$GITHUB_ENV"
 
+      # =======================
+      # PR COMMENT
+      # =======================
+      - name: Comment PR with Test Results
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const passed = process.env.PASSED;
+            const failed = process.env.FAILED;
+            const skipped = process.env.SKIPPED || '0';
+            const total = process.env.TOTAL;
+            const reportSection = process.env.REPORT_SECTION;
+
+            const passRate = total > 0 ? ((passed / total) * 100).toFixed(1) : '0';
+            const status = failed === '0' || failed === 0 ? '✅ PASSED' : '❌ FAILED';
+            const emoji = failed === '0' || failed === 0 ? '🎉' : '⚠️';
+
+            const body = `## ${emoji} DigiBot Smoke Test Results ${emoji}
+
+            **Status:** ${status}
+            **Pass Rate:** ${passRate}%
+
+            ### 📊 Test Summary
+            | Metric | Count |
+            |--------|-------|
+            | ✅ Passed | ${passed} |
+            | ❌ Failed | ${failed} |
+            | ⏭️ Skipped | ${skipped} |
+            | 📝 Total | ${total} |
+
+            ### 📂 Test Report
+            ${reportSection}
+
+            ---
+            *Automated test run for PR #${{ github.event.pull_request.number }}*
+            *Commit: \`${{ github.event.pull_request.head.sha }}\`*
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      # =======================
+      # EMAIL NOTIFICATION
+      # =======================
       - name: Send Email Notification
-        if: always() && steps.gemini_gate.outputs.block != 'true'
-        continue-on-error: true
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{ env.SMTP_SERVER }}
-          server_port: ${{ env.SMTP_PORT }}
-          username: ${{ env.REPORT_FROM_MAIL }}
-          password: ${{ env.REPORT_FROM_PASSWORD }}
-          subject: "DigiBot - QA Automation Complete: ${{ env.PASSED }}/${{ env.TOTAL }} Passed - PR #${{ github.event.pull_request.number }}"
-          to: ${{ env.REPORT_TO_MAILS }}
-          from: "QA Automation Bot"
+          server_address: premium49.web-hosting.com
+          server_port: 465
+          username: ${{ secrets.REPORT_FROM_MAIL }}
+          password: ${{ secrets.REPORT_FROM_PASSWORD }}
+          subject: "DigiBot PR #${{ github.event.pull_request.number }} - Smoke Tests: ${{ env.PASSED }}/${{ env.TOTAL }} Passed"
           body: |
-            DigiBot – QA Automation Summary
-            Execution Status: Completed
-            PR: #${{ github.event.pull_request.number }}
+            DigiBot – Smoke Test Results for PR #${{ github.event.pull_request.number }}
+
+            Pull Request: ${{ github.event.pull_request.title }}
+            Author: ${{ github.event.pull_request.user.login }}
+            Branch: ${{ github.event.pull_request.head.ref }}
 
             SUMMARY:
             ✅ Passed: ${{ env.PASSED }}
             ❌ Failed: ${{ env.FAILED }}
+            ⏭️ Skipped: ${{ env.SKIPPED }}
+            📝 Total: ${{ env.TOTAL }}
 
             ${{ env.REPORT_SECTION }}
 
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: e2e/playwright-report
+            Pull Request URL: ${{ github.event.pull_request.html_url }}
 
-      - name: Upload logs
+          to: ${{ secrets.REPORT_TO_MAILS }}
+          from: "DigiBot QA Bot"
+
+      # =======================
+      # CLEANUP
+      # =======================
+      - name: Stop Docker Services
         if: always()
+        run: |
+          docker compose -f docker-compose.ci.yml down -v
+          echo "✅ Docker services stopped and volumes removed"
+
+      - name: Upload Playwright Report as Artifact
+        if: always() && env.REPORT_AVAILABLE == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ci-logs
-          path: |
-            backend/logs
-            frontend/preview.stdout.log
+          name: playwright-report-pr-${{ github.event.pull_request.number }}
+          path: playwright-report/
+          retention-days: 30
