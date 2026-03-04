@@ -1200,7 +1200,7 @@
 	app.post("/auth/login", (_req, res) => {
 		res.status(500).json({
 			success: false,
-			message: "Intentional backend error for baseline capture v3",
+			message: "Intentional backend error for baseline capture",
 		});
 	});
 
