@@ -40,3 +40,5 @@ _PR trigger: baseline CI verification run v33 (2026-03-04)._
 _PR trigger: baseline CI verification run v34 (2026-03-04)._
 
 _PR trigger: baseline CI verification run v35 (2026-03-04)._
+
+_PR trigger: baseline CI verification run v36 (2026-03-04)._
