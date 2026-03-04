@@ -1197,13 +1197,6 @@
 		express.static(`${process.env.BACKEND_PATH}/uploads/appIcon`),
 	);
 
-	app.post("/auth/login", (_req, res) => {
-		res.status(500).json({
-			success: false,
-			message: "Intentional backend error for baseline capture",
-		});
-	});
-
 	app.use(usersRoute());
 	app.use(teamRoute());
 	app.use(documentRoute());
@@ -2443,13 +2436,11 @@
 			if (role) {
 				role = role + "";
 				if (role !== "" && !["1", "2", "3"].includes(role)) {
-					return res
-						.status(401)
-						.send({
-							success: false,
-							error: "invalid_role",
-							message: "Invalid Role Id provided",
-						});
+					return res.status(401).send({
+						success: false,
+						error: "invalid_role",
+						message: "Invalid Role Id provided",
+					});
 				}
 			}
 
@@ -3716,14 +3707,12 @@
 		const hours = String(created.getUTCHours()).padStart(2, "0");
 		const minutes = String(created.getUTCMinutes()).padStart(2, "0");
 		const seconds = String(created.getUTCSeconds()).padStart(2, "0");
-		response
-			.status(201)
-			.send({
-				jobId: jobData.fileName[0],
-				success: true,
-				status: "pending",
-				message: "File uploaded successfully. Processing has started.",
-			});
+		response.status(201).send({
+			jobId: jobData.fileName[0],
+			success: true,
+			status: "pending",
+			message: "File uploaded successfully. Processing has started.",
+		});
 		const mysqlTimestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 		if (!retry) {
 			const newNotification = await knex("notification").insert({
@@ -4689,13 +4678,11 @@
 					return processUploadedFile(req, res);
 				} catch (error) {
 					console.log(error);
-					return res
-						.status(500)
-						.json({
-							success: false,
-							error: "server_error",
-							message: "An unexpected error occured",
-						});
+					return res.status(500).json({
+						success: false,
+						error: "server_error",
+						message: "An unexpected error occured",
+					});
 				}
 			} else if (req.params.integrationId == "integration_2") {
 				try {
@@ -4839,13 +4826,11 @@
 					return processUploadedFile(req, res);
 				} catch (err) {
 					console.log(err);
-					return res
-						.status(500)
-						.json({
-							success: false,
-							error: "server_error",
-							message: "An unexpected error occured",
-						});
+					return res.status(500).json({
+						success: false,
+						error: "server_error",
+						message: "An unexpected error occured",
+					});
 				}
 			} else if (req.params.integrationId == "integration_3") {
 				try {
@@ -4978,13 +4963,11 @@
 					return processUploadedFile(req, res);
 				} catch (err) {
 					console.log(err);
-					return res
-						.status(500)
-						.json({
-							status: false,
-							error: "server_error",
-							message: "An unexpected error occured",
-						});
+					return res.status(500).json({
+						status: false,
+						error: "server_error",
+						message: "An unexpected error occured",
+					});
 				}
 			} else if (req.params.integrationId == "integration_4") {
 				try {
@@ -5047,11 +5030,9 @@
 					// Slack gives `url_private_download` for >90% of files.
 					const downloadUrl = file.url_private_download;
 					if (!downloadUrl) {
-						return res
-							.status(400)
-							.json({
-								message: "Slack cannot provide download URL for this file",
-							});
+						return res.status(400).json({
+							message: "Slack cannot provide download URL for this file",
+						});
 					}
 
 					// 4️⃣ Team UUID (same as multer)
@@ -5107,13 +5088,11 @@
 					return processUploadedFile(req, res);
 				} catch (err) {
 					console.log(err);
-					return res
-						.status(500)
-						.json({
-							success: false,
-							error: "server_error",
-							message: "An unexpected error occured",
-						});
+					return res.status(500).json({
+						success: false,
+						error: "server_error",
+						message: "An unexpected error occured",
+					});
 				}
 			} else if (req.params.integrationId == "integration_5") {
 				try {
@@ -5241,13 +5220,11 @@
 					return processUploadedFile(req, res);
 				} catch (err) {
 					console.log(err);
-					return res
-						.status(500)
-						.json({
-							success: false,
-							error: "server_error",
-							message: "An unexpected error occurred",
-						});
+					return res.status(500).json({
+						success: false,
+						error: "server_error",
+						message: "An unexpected error occurred",
+					});
 				}
 			} else {
 				return res
@@ -5718,12 +5695,10 @@
 										message: request.t("invitationSentSuccess"),
 									}),
 								);
-								return response
-									.status(200)
-									.send({
-										success: true,
-										message: request.t("invitationSentSuccess"),
-									});
+								return response.status(200).send({
+									success: true,
+									message: request.t("invitationSentSuccess"),
+								});
 							} else {
 								logger.warn(
 									`Failed to send invitation mail to ${sanitizeForLog(request.body.email)}`,
@@ -5734,12 +5709,10 @@
 										message: request.t("invitationSentFailed"),
 									}),
 								);
-								return response
-									.status(200)
-									.send({
-										success: false,
-										message: request.t("invitationSentFailed"),
-									});
+								return response.status(200).send({
+									success: false,
+									message: request.t("invitationSentFailed"),
+								});
 							}
 						});
 					});
@@ -5747,12 +5720,10 @@
 						.status(200)
 						.json({ success: true, message: "Invitation sent successfully" });
 				} else {
-					response
-						.status(403)
-						.json({
-							success: false,
-							message: "The email is already registered as a team member.",
-						});
+					response.status(403).json({
+						success: false,
+						message: "The email is already registered as a team member.",
+					});
 				}
 			} catch (error) {
 				console.log(error);
@@ -7203,12 +7174,10 @@
 												logger.info(
 													`Embeddings created and stored on vector database`,
 												);
-												return response
-													.status(200)
-													.json({
-														success: true,
-														message: "File uploaded successfully",
-													});
+												return response.status(200).json({
+													success: true,
+													message: "File uploaded successfully",
+												});
 											})
 											.catch((err) => {
 												logger.warn(`Failed to create embeddings`);
@@ -7228,12 +7197,10 @@
 										});
 									});
 							} else {
-								return response
-									.status(200)
-									.json({
-										success: true,
-										message: "File uploaded successfully",
-									});
+								return response.status(200).json({
+									success: true,
+									message: "File uploaded successfully",
+								});
 							}
 						} catch (err) {
 							console.error("Error during transcription:", err);
