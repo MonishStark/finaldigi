@@ -241,13 +241,15 @@ jobs:
       - name: Prepare Blocked Email Report
         if: steps.gemini_gate.outputs.block == 'true'
         shell: bash
+        env:
+          GEMINI_SUMMARY: ${{ steps.gemini_gate.outputs.summary }}
         run: |
           {
             echo "REPORT_SECTION<<EOF"
             echo "🔐 Gemini Gate Status: ✗ BLOCKED"
             echo ""
             echo "Critical Issues Detected:"
-            echo "${{ steps.gemini_gate.outputs.summary }}"
+            printf '%s\n' "$GEMINI_SUMMARY"
             echo ""
             echo "⚠️ Action Required:"
             echo "Please fix the High/Critical security issues before Playwright tests can run."
