@@ -111,31 +111,31 @@ jobs:
               });
 
               for (const c of issueComments) {
-                if (!isGeminiAuthor(c.user?.login)) continue;
-                const body = c.body ? String(c.body) : '';
+                if (!c || !isGeminiAuthor(c?.user?.login)) continue;
+                const body = c?.body ? String(c.body) : '';
                 const bodyHtml = await fetchHtmlFor(
                   'GET /repos/{owner}/{repo}/issues/comments/{comment_id}',
-                  { owner, repo, comment_id: c.id }
+                  { owner, repo, comment_id: c?.id }
                 );
                 out.push({ kind: 'issue_comment', body, bodyHtml });
               }
 
               for (const r of reviews) {
-                if (!isGeminiAuthor(r.user?.login)) continue;
-                const body = r.body ? String(r.body) : '';
+                if (!r || !isGeminiAuthor(r?.user?.login)) continue;
+                const body = r?.body ? String(r.body) : '';
                 const bodyHtml = await fetchHtmlFor(
                   'GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}',
-                  { owner, repo, pull_number: issue_number, review_id: r.id }
+                  { owner, repo, pull_number: issue_number, review_id: r?.id }
                 );
                 out.push({ kind: 'review', body, bodyHtml });
               }
 
               for (const rc of reviewComments) {
-                if (!isGeminiAuthor(rc.user?.login)) continue;
-                const body = rc.body ? String(rc.body) : '';
+                if (!rc || !isGeminiAuthor(rc?.user?.login)) continue;
+                const body = rc?.body ? String(rc.body) : '';
                 const bodyHtml = await fetchHtmlFor(
                   'GET /repos/{owner}/{repo}/pulls/comments/{comment_id}',
-                  { owner, repo, comment_id: rc.id }
+                  { owner, repo, comment_id: rc?.id }
                 );
                 out.push({ kind: 'review_comment', body, bodyHtml });
               }
