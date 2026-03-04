@@ -15,7 +15,9 @@ on:
 
 permissions:
   contents: read
+  issues: read
   pull-requests: write
+  checks: read
   id-token: write
   actions: read
 
@@ -38,6 +40,161 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Check Gemini bot for High/Critical issues
+        id: gemini_gate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issueNumber = context.payload.pull_request?.number;
+
+            if (!issueNumber) {
+              core.setOutput('block', 'false');
+              core.setOutput('summary', 'No PR context (non-PR run).');
+              return;
+            }
+
+            const maxWaitSeconds = Number(process.env.GEMINI_WAIT_SECONDS || 900);
+            const pollSeconds = Number(process.env.GEMINI_POLL_SECONDS || 20);
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            const isGeminiAuthor = (login) => (login || '').toLowerCase().includes('gemini-code-assist');
+
+            const highCriticalRegex = /(security\s+(critical|high)|critical\s*priority|high\s*priority|\[(critical|high)\]|\b(remote\s+code\s+execution|\brce\b|sql\s+injection|command\s+injection)\b)/i;
+
+            async function fetchGeminiTexts() {
+              const texts = [];
+
+              const issueComments = await github.paginate(github.rest.issues.listComments, {
+                owner,
+                repo,
+                issue_number: issueNumber,
+                per_page: 100,
+              });
+
+              for (const c of issueComments) {
+                if (isGeminiAuthor(c.user?.login) && c.body) texts.push(String(c.body));
+              }
+
+              const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                owner,
+                repo,
+                pull_number: issueNumber,
+                per_page: 100,
+              });
+
+              for (const r of reviews) {
+                if (isGeminiAuthor(r.user?.login) && r.body) texts.push(String(r.body));
+              }
+
+              const reviewComments = await github.paginate(github.rest.pulls.listReviewComments, {
+                owner,
+                repo,
+                pull_number: issueNumber,
+                per_page: 100,
+              });
+
+              for (const rc of reviewComments) {
+                if (isGeminiAuthor(rc.user?.login) && rc.body) texts.push(String(rc.body));
+              }
+
+              return texts;
+            }
+
+            const start = Date.now();
+            let texts = [];
+
+            while (Date.now() - start < maxWaitSeconds * 1000) {
+              texts = await fetchGeminiTexts();
+              if (texts.length > 0) break;
+              core.info(`Waiting for Gemini review... (${Math.round((Date.now() - start) / 1000)}s)`);
+              await sleep(pollSeconds * 1000);
+            }
+
+            if (texts.length === 0) {
+              core.setOutput('block', 'true');
+              core.setOutput('summary', `Gemini review not found within ${Math.round(maxWaitSeconds / 60)} minutes.`);
+              return;
+            }
+
+            const findings = [];
+            for (const text of texts) {
+              for (const line of String(text).split(/\r?\n/)) {
+                if (highCriticalRegex.test(line)) {
+                  const cleaned = line.trim();
+                  if (cleaned) findings.push(cleaned.slice(0, 300));
+                }
+              }
+            }
+
+            const unique = [...new Set(findings)].slice(0, 25);
+            const block = unique.length > 0;
+
+            core.setOutput('block', block ? 'true' : 'false');
+            core.setOutput('summary', block ? unique.join('\n') : 'No High/Critical issues reported by Gemini.');
+
+      - name: Prepare Blocked Report Section
+        if: steps.gemini_gate.outputs.block == 'true'
+        shell: bash
+        run: |
+          {
+            echo "REPORT_SECTION<<EOF"
+            echo "🔐 Gemini Gate Status: ✗ BLOCKED"
+            echo ""
+            echo "High/Critical findings from Gemini:" 
+            echo "${{ steps.gemini_gate.outputs.summary }}"
+            echo ""
+            echo "Playwright smoke tests were not executed."
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Notify - Blocked by Gemini High/Critical
+        if: steps.gemini_gate.outputs.block == 'true'
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: premium49.web-hosting.com
+          server_port: 465
+          username: ${{ secrets.REPORT_FROM_MAIL }}
+          password: ${{ secrets.REPORT_FROM_PASSWORD }}
+          subject: "DigiBot PR #${{ github.event.pull_request.number }} - BLOCKED by Gemini High/Critical"
+          body: |
+            DigiBot – Smoke Test Gate Result
+
+            PR: #${{ github.event.pull_request.number }}
+            Status: BLOCKED
+
+            ${{ env.REPORT_SECTION }}
+          to: ${{ secrets.REPORT_TO_MAILS }}
+          from: "DigiBot QA Bot"
+
+      - name: Notify - Gemini passed, smoke starting
+        if: steps.gemini_gate.outputs.block != 'true'
+        continue-on-error: true
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: premium49.web-hosting.com
+          server_port: 465
+          username: ${{ secrets.REPORT_FROM_MAIL }}
+          password: ${{ secrets.REPORT_FROM_PASSWORD }}
+          subject: "DigiBot PR #${{ github.event.pull_request.number }} - Gemini passed, smoke tests starting"
+          body: |
+            DigiBot – Smoke Test Gate Result
+
+            PR: #${{ github.event.pull_request.number }}
+            Status: Gemini gate passed (no High/Critical)
+
+            Playwright smoke tests are starting now.
+          to: ${{ secrets.REPORT_TO_MAILS }}
+          from: "DigiBot QA Bot"
+
+      - name: Stop workflow due to Gemini High/Critical
+        if: steps.gemini_gate.outputs.block == 'true'
+        run: |
+          echo "Blocking issues reported by Gemini (High/Critical). Skipping Playwright." >&2
+          exit 1
 
       # =======================
       # START DOCKER SERVICES
@@ -287,7 +444,7 @@ jobs:
       # EMAIL NOTIFICATION
       # =======================
       - name: Send Email Notification
-        if: always()
+        if: always() && steps.gemini_gate.outputs.block != 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: premium49.web-hosting.com

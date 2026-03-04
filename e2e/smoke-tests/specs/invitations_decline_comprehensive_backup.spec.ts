@@ -38,7 +38,10 @@ test.describe("GET /invitations - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -581,4 +584,3 @@ test.describe("GET /invitations - Comprehensive Tests", () => {
 		});
 	});
 });
-

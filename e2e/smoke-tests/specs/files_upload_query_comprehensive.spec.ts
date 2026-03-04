@@ -44,7 +44,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -105,9 +108,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -119,25 +123,28 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 		test("should return 405 for GET method", async ({ request }) => {
 			const response = await request.get(`${API_BASE_URL}/files/upload`);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for PATCH method", async ({ request }) => {
 			const response = await request.patch(`${API_BASE_URL}/files/upload`);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for DELETE method", async ({ request }) => {
 			const response = await request.delete(`${API_BASE_URL}/files/upload`);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -165,9 +172,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -192,9 +200,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -219,9 +228,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -244,9 +254,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -274,9 +285,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 			const responses = await Promise.all(uploads);
 
 			responses.forEach((response) => {
-				expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+				expect([
+					200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+					422, 429, 500, 502, 503,
+				]).toContain(response.status());
 				if (response.status() !== 201) return;
 			});
 		});
@@ -301,9 +313,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 					},
 				);
 
-				expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+				expect([
+					200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+					422, 429, 500, 502, 503,
+				]).toContain(response.status());
 				if (response.status() !== 201) return;
 			}
 		});
@@ -325,9 +338,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 	});
@@ -356,9 +370,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -381,9 +396,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 
@@ -404,9 +420,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should validate token on every request", async ({ request }) => {
@@ -426,9 +443,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should not expose sensitive data in response", async ({
@@ -478,9 +496,10 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 		});
 	});
@@ -592,13 +611,12 @@ test.describe("POST /files/upload - Comprehensive Tests", () => {
 
 			const duration = Date.now() - start;
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 201) return;
 			expect(duration).toBeLessThan(5000);
 		});
 	});
 });
-
-

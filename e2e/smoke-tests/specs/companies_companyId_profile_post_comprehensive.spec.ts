@@ -38,7 +38,10 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -65,15 +68,19 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 
 			if (response.status() === 200) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
-				expect(data.message).toMatch(/Company profile updated successfully|User account not found/i);
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
+				expect(data.message).toMatch(
+					/Company profile updated successfully|User account not found/i,
+				);
 				expect(data.companyData).toBeTruthy();
 				expect(data.companyData).toHaveProperty("companyId");
 				expect(data.companyData).toHaveProperty("companyName");
@@ -128,15 +135,20 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 
 			if (response.status() === 400) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 				if (data.error) expect(data.error).toBe("bad_request");
-				expect(data.message).toMatch(/No fields provided for update|User account not found/i);
+				expect(data.message).toMatch(
+					/No fields provided for update|User account not found/i,
+				);
 			}
 		});
 	});
@@ -157,15 +169,20 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 			if (data.error) expect(data.error).toBe("missing_access_token");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Missing authentication token provided|User account not found/i);
+				expect(data.message).toMatch(
+					/Missing authentication token provided|User account not found/i,
+				);
 			expect(!data.details || Array.isArray(data.details)).toBe(true);
 			if (Array.isArray(data.details) && data.details.length > 0) {
 				expect(data.details[0].field).toBe("Authorization");
@@ -191,12 +208,15 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 			if (data.error) expect(data.error).toBe("invalid_access_token");
 			if (data.message !== undefined) {
 				expect([
@@ -224,12 +244,15 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) {
 				expect([
 					"access_token_expired",
@@ -238,7 +261,9 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				]).toContain(data.error);
 			}
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Access token has expired|User account not found/i);
+				expect(data.message).toMatch(
+					/Access token has expired|User account not found/i,
+				);
 			expect(!data.details || Array.isArray(data.details)).toBe(true);
 			if (Array.isArray(data.details) && data.details.length > 0) {
 				expect(data.details[0].field).toBe("Authorization");
@@ -266,13 +291,16 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 
 			if (response.status() === 403) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 				expect(data.error).toBe("forbidden");
 				expect(data.message).toBe(
 					"You are not allowed to update this company profile",
@@ -299,15 +327,21 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 
 			if (response.status() === 404) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 				if (data.error) expect(data.error).toBe("not_found");
-				if (data.message) expect(data.message).toMatch(/Company not found|User account not found/i);
+				if (data.message)
+					expect(data.message).toMatch(
+						/Company not found|User account not found/i,
+					);
 				if (data.details !== undefined) {
 					expect(!data.details || Array.isArray(data.details)).toBe(true);
 				}
@@ -336,9 +370,10 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -359,12 +394,15 @@ test.describe("POST /companies/{companyId}/profile - Comprehensive Tests", () =>
 					data: {},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (![400, 415, 401, 422].includes(response.status())) return;
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) {
 				expect([
 					"unsupported_media_type",
@@ -374,8 +412,7 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					"validation_error",
 				]).toContain(data.error);
 			}
-			if (data.message !== undefined)
-				expect(data.message).toBeTruthy();
+			if (data.message !== undefined) expect(data.message).toBeTruthy();
 			expect(!data.details || Array.isArray(data.details)).toBe(true);
 		});
 
@@ -392,12 +429,15 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					data: "{}",
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (![400, 415, 401, 422].includes(response.status())) return;
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) {
 				expect([
 					"unsupported_media_type",
@@ -415,7 +455,9 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 	// ========================
 
 	test.describe("422 Validation Error Responses", () => {
-		test("should return 400 or 422 for invalid payload", async ({ request }) => {
+		test("should return 400 or 422 for invalid payload", async ({
+			request,
+		}) => {
 			const response = await request.post(
 				`${API_BASE_URL}/companies/${testCompanyId}/profile`,
 				{
@@ -433,20 +475,25 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 
 			if ([400, 422].includes(response.status())) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 				expect([
 					"validation_error",
 					"invalid_access_token",
 					"unauthorized",
 					"bad_request",
 				]).toContain(data.error || "");
-				expect(data.message).toMatch(/One or more fields contain invalid values|User account not found/i);
+				expect(data.message).toMatch(
+					/One or more fields contain invalid values|User account not found/i,
+				);
 				expect(!data.details || Array.isArray(data.details)).toBe(true);
 				if (data.details.length > 0) {
 					expect(data.details[0]).toHaveProperty("field");
@@ -473,16 +520,21 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 
 			if (response.status() === 423) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 				expect(data.error).toBe("locked");
-				expect(data.message).toMatch(/Account is locked and cannot be updated|User account not found/i);
+				expect(data.message).toMatch(
+					/Account is locked and cannot be updated|User account not found/i,
+				);
 				expect(!data.details || Array.isArray(data.details)).toBe(true);
 			}
 		});
@@ -522,7 +574,9 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 				if (contentType?.includes("application/json")) {
 					const data = await rateLimited.json();
 					if (data && data.success !== undefined) {
-						if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+						if (data.success !== undefined)
+							if (data.success !== undefined)
+								expect(typeof data.success).toBe("boolean");
 					}
 				}
 			}
@@ -597,4 +651,3 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 		});
 	});
 });
-

@@ -38,7 +38,10 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -47,7 +50,9 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 	});
 
 	test.describe("200 Success Responses", () => {
-		test("should process Google OAuth callback successfully", async ({ request }) => {
+		test("should process Google OAuth callback successfully", async ({
+			request,
+		}) => {
 			const response = await request.post(
 				`${API_BASE_URL}/integrations/auth/google/callback`,
 				{
@@ -59,19 +64,24 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "test-auth-code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
 			if (response.status() === 200) {
 				const data = await parseJsonSafely(response);
 
-				if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
-				expect(data.message).toMatch(/Login successful|User account not found/i);
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
+				expect(data.message).toMatch(
+					/Login successful|User account not found/i,
+				);
 				expect(data.user).toBeDefined();
 			}
 		});
 
-		test("should return integration details after successful callback", async ({ request }) => {
+		test("should return integration details after successful callback", async ({
+			request,
+		}) => {
 			const response = await request.post(
 				`${API_BASE_URL}/integrations/auth/google/callback`,
 				{
@@ -83,7 +93,7 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "test-auth-code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
 			if (response.status() === 200) {
@@ -107,19 +117,23 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 					data: {
 						state: "test-state",
 					},
-				}
+				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 400) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) expect(typeof data.error).toBe("string");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Invalid callback data|User account not found/i);
+				expect(data.message).toMatch(
+					/Invalid callback data|User account not found/i,
+				);
 		});
 
 		test("should return 400 when state is missing", async ({ request }) => {
@@ -133,19 +147,23 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 					data: {
 						code: "test-code",
 					},
-				}
+				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 400) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) expect(typeof data.error).toBe("string");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Invalid callback data|User account not found/i);
+				expect(data.message).toMatch(
+					/Invalid callback data|User account not found/i,
+				);
 		});
 
 		test("should return 400 when auth code is invalid", async ({ request }) => {
@@ -160,19 +178,23 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "invalid_code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 400) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) expect(typeof data.error).toBe("string");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Invalid callback data|User account not found/i);
+				expect(data.message).toMatch(
+					/Invalid callback data|User account not found/i,
+				);
 		});
 	});
 
@@ -188,19 +210,23 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "test-code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) expect(typeof data.error).toBe("string");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Authentication failed|User account not found/i);
+				expect(data.message).toMatch(
+					/Authentication failed|User account not found/i,
+				);
 		});
 
 		test("should return 401 when invalid access token", async ({ request }) => {
@@ -215,24 +241,30 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "test-code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 			if (data.error !== undefined) expect(typeof data.error).toBe("string");
 			if (data.message !== undefined)
-				expect(data.message).toMatch(/Authentication failed|User account not found/i);
+				expect(data.message).toMatch(
+					/Authentication failed|User account not found/i,
+				);
 		});
 	});
 
 	test.describe("403 Forbidden Responses", () => {
-		test("should return 403 when user does not have permission", async ({ request }) => {
+		test("should return 403 when user does not have permission", async ({
+			request,
+		}) => {
 			const response = await request.post(
 				`${API_BASE_URL}/integrations/auth/google/callback`,
 				{
@@ -245,7 +277,7 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						state: "test-state",
 						userId: "different-user-id",
 					},
-				}
+				},
 			);
 
 			if (response.status() === 403) {
@@ -269,16 +301,17 @@ test.describe("POST /integrations/auth/google/callback - Comprehensive Tests", (
 						code: "test-code",
 						state: "test-state",
 					},
-				}
+				},
 			);
 
 			const contentType = response.headers()["content-type"];
 			if (contentType) {
 				// Accept both JSON and HTML responses from callback endpoint
-				const hasValidType = ['application/json', 'text/html'].some(type => contentType.includes(type));
+				const hasValidType = ["application/json", "text/html"].some((type) =>
+					contentType.includes(type),
+				);
 				expect(hasValidType).toBe(true);
 			}
 		});
 	});
 });
-

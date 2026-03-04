@@ -38,7 +38,10 @@ test.describe("GET /super-admin/users/{userId} - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -61,7 +64,8 @@ test.describe("GET /super-admin/users/{userId} - Comprehensive Tests", () => {
 			if (response.status() === 200) {
 				const data = await parseJsonSafely(response);
 
-				if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 				expect(data).toHaveProperty("id");
 			}
 		});
@@ -96,9 +100,10 @@ test.describe("GET /super-admin/users/{userId} - Comprehensive Tests", () => {
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
@@ -116,9 +121,10 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
@@ -162,7 +168,8 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 			if (response.status() === 403) {
 				const data = await parseJsonSafely(response);
 
-				if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+				if (data.error !== undefined)
+					expect(String(data.error).length).toBeGreaterThan(0);
 			}
 		});
 	});
@@ -182,7 +189,8 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 			if (response.status() !== 404) return;
 			const data = await parseJsonSafely(response);
 
-			if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+			if (data.error !== undefined)
+				expect(String(data.error).length).toBeGreaterThan(0);
 		});
 	});
 
@@ -205,4 +213,3 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 		});
 	});
 });
-

@@ -39,7 +39,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -73,9 +76,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -100,9 +104,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 415 for wrong Content-Type", async ({ request }) => {
@@ -120,9 +125,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -136,9 +142,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				`${API_BASE_URL}/files/${testFileId}/name`,
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for POST method", async ({ request }) => {
@@ -146,9 +153,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				`${API_BASE_URL}/files/${testFileId}/name`,
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for DELETE method", async ({ request }) => {
@@ -156,9 +164,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				`${API_BASE_URL}/files/${testFileId}/name`,
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -184,9 +193,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -207,9 +217,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -228,9 +239,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -251,9 +263,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -276,10 +289,11 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 			const responses = await Promise.all(updates);
 
 			responses.forEach((response) => {
-				expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
-				if (!([200, 201]).includes(response.status())) return;
+				expect([
+					200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+					422, 429, 500, 502, 503,
+				]).toContain(response.status());
+				if (![200, 201].includes(response.status())) return;
 			});
 		});
 
@@ -298,9 +312,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -319,9 +334,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 	});
@@ -346,9 +362,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -367,9 +384,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -388,9 +406,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -409,9 +428,10 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should not expose sensitive data in response", async ({
@@ -535,13 +555,12 @@ test.describe("PATCH /files/:fileId/name - Comprehensive Tests", () => {
 
 			const duration = Date.now() - start;
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
-			if (!([200, 201]).includes(response.status())) return;
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
+			if (![200, 201].includes(response.status())) return;
 			expect(duration).toBeLessThan(5000);
 		});
 	});
 });
-
-

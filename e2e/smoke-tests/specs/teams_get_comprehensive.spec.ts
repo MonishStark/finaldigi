@@ -38,7 +38,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -59,13 +62,15 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 
 			const data = await parseJsonSafely(response);
-			if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+			if (data.success !== undefined)
+				expect(typeof data.success).toBe("boolean");
 		});
 	});
 
@@ -74,7 +79,9 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	// ========================
 
 	test.describe("400 Bad Request Responses", () => {
-		test("should return 400 for invalid query parameters", async ({ request }) => {
+		test("should return 400 for invalid query parameters", async ({
+			request,
+		}) => {
 			const response = await request.get(`${API_BASE_URL}/teams`, {
 				headers: {
 					Authorization: `Bearer ${validAccessToken}`,
@@ -85,9 +92,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 	});
@@ -99,9 +107,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	test.describe("401 Unauthorized Responses", () => {
 		test("should return 401 for missing access token", async ({ request }) => {
 			const response = await request.get(`${API_BASE_URL}/teams`);
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -124,7 +133,8 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 
 			if (response.status() === 403) {
 				const data = await parseJsonSafely(response);
-				if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+				if (data.error !== undefined)
+					expect(String(data.error).length).toBeGreaterThan(0);
 			}
 		});
 	});
@@ -134,16 +144,19 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	// ========================
 
 	test.describe("404 Not Found Responses", () => {
-		test("should return 404 for non-existent teams path", async ({ request }) => {
+		test("should return 404 for non-existent teams path", async ({
+			request,
+		}) => {
 			const response = await request.get(`${API_BASE_URL}/teams/not-found`, {
 				headers: {
 					Authorization: `Bearer ${validAccessToken}`,
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -152,7 +165,9 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	// ========================
 
 	test.describe("409 Conflict Responses", () => {
-		test("should handle 409 conflict scenario for teams list", async ({ request }) => {
+		test("should handle 409 conflict scenario for teams list", async ({
+			request,
+		}) => {
 			const response = await request.get(`${API_BASE_URL}/teams`, {
 				headers: {
 					Authorization: `Bearer ${validAccessToken}`,
@@ -162,9 +177,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 	});
@@ -174,7 +190,9 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	// ========================
 
 	test.describe("422 Validation Error Responses", () => {
-		test("should return 422 for malformed pagination values", async ({ request }) => {
+		test("should return 422 for malformed pagination values", async ({
+			request,
+		}) => {
 			const response = await request.get(`${API_BASE_URL}/teams`, {
 				headers: {
 					Authorization: `Bearer ${validAccessToken}`,
@@ -185,9 +203,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 	});
@@ -197,7 +216,9 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 	// ========================
 
 	test.describe("429 Rate Limit Responses", () => {
-		test("should return 429 for burst requests to teams list", async ({ request }) => {
+		test("should return 429 for burst requests to teams list", async ({
+			request,
+		}) => {
 			const requests = Array(12)
 				.fill(null)
 				.map(() =>
@@ -209,7 +230,9 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				);
 
 			const responses = await Promise.all(requests);
-			const hasRateLimit = responses.some((response) => response.status() === 429);
+			const hasRateLimit = responses.some(
+				(response) => response.status() === 429,
+			);
 			if (!hasRateLimit) return;
 			expect(hasRateLimit).toBe(true);
 		});
@@ -235,9 +258,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -248,9 +272,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -266,9 +291,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 	});
@@ -290,9 +316,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -303,9 +330,10 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -359,13 +387,12 @@ test.describe("GET /teams - Comprehensive Tests", () => {
 
 			const duration = Date.now() - start;
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 			expect(duration).toBeLessThan(5000);
 		});
 	});
 });
-
-

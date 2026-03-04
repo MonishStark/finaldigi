@@ -32,18 +32,21 @@ test.describe("PUT /teams/{teamId} - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
 		}
 		adminAccessToken = token;
 		validAccessToken = token;
-	
+
 		// Fetch teams to get a valid team ID
 		const teamsResponse = await request.get(`${API_BASE_URL}/teams`, {
 			headers: { Authorization: `Bearer ${validAccessToken}` },
-			params: { companyId: testData.users.admin1.companyId }
+			params: { companyId: testData.users.admin1.companyId },
 		});
 
 		if (teamsResponse.ok()) {
@@ -102,9 +105,10 @@ test.describe("PUT /teams/{teamId} - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should validate token on every request", async ({ request }) => {
@@ -118,9 +122,10 @@ test.describe("PUT /teams/{teamId} - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -191,5 +196,3 @@ test.describe("PUT /teams/{teamId} - Comprehensive Tests", () => {
 		});
 	});
 });
-
-

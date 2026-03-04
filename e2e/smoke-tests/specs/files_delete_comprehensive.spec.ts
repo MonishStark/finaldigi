@@ -41,7 +41,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -76,13 +79,16 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 
 			if (response.headers()["content-type"]?.includes("application/json")) {
 				const data = await parseJsonSafely(response);
-				if (data.success !== undefined) if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					if (data.success !== undefined)
+						expect(typeof data.success).toBe("boolean");
 			}
 		});
 
@@ -102,9 +108,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -116,9 +123,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 		test("should return 405 for GET method", async ({ request }) => {
 			const response = await request.get(`${API_BASE_URL}/files/${testFileId}`);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for POST method", async ({ request }) => {
@@ -126,17 +134,19 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				`${API_BASE_URL}/files/${testFileId}`,
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should return 405 for PUT method", async ({ request }) => {
 			const response = await request.put(`${API_BASE_URL}/files/${testFileId}`);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -163,9 +173,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -184,9 +195,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			});
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should handle concurrent deletion attempts", async ({ request }) => {
@@ -209,10 +221,11 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 			const responses = await Promise.all(deletes);
 
 			responses.forEach((response) => {
-				expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
-				if (!([200, 201]).includes(response.status())) return;
+				expect([
+					200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+					422, 429, 500, 502, 503,
+				]).toContain(response.status());
+				if (![200, 201].includes(response.status())) return;
 			});
 		});
 
@@ -234,9 +247,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should handle empty parentFolder", async ({ request }) => {
@@ -255,9 +269,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 		});
 
@@ -277,9 +292,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -306,9 +322,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should prevent SQL injection in teamId", async ({ request }) => {
@@ -327,9 +344,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should validate token on every request", async ({ request }) => {
@@ -348,9 +366,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 
 		test("should not expose sensitive data in response", async ({
@@ -398,9 +417,10 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 		});
 	});
 
@@ -500,13 +520,12 @@ test.describe("DELETE /files/:fileId - Comprehensive Tests", () => {
 
 			const duration = Date.now() - start;
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
-			if (!([200, 201]).includes(response.status())) return;
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
+			if (![200, 201].includes(response.status())) return;
 			expect(duration).toBeLessThan(5000);
 		});
 	});
 });
-
-

@@ -38,7 +38,10 @@ test.describe("POST /invitations/accept - Comprehensive Tests", () => {
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -65,7 +68,8 @@ test.describe("POST /invitations/accept - Comprehensive Tests", () => {
 			if (response.status() === 200) {
 				const data = await parseJsonSafely(response);
 
-				if (data.success !== undefined) expect(typeof data.success).toBe("boolean");
+				if (data.success !== undefined)
+					expect(typeof data.success).toBe("boolean");
 				expect(data.message).toMatch(/accepted|successfully/i);
 			}
 		});
@@ -87,13 +91,15 @@ test.describe("POST /invitations/accept - Comprehensive Tests", () => {
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
-				if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+				if (data.error !== undefined)
+					expect(String(data.error).length).toBeGreaterThan(0);
 		});
 
 		test("should return 400 when token is missing", async ({ request }) => {
@@ -109,13 +115,15 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
-				if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+				if (data.error !== undefined)
+					expect(String(data.error).length).toBeGreaterThan(0);
 		});
 	});
 
@@ -133,9 +141,10 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
@@ -157,9 +166,10 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 					},
 				},
 			);
-expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const data = await parseJsonSafely(response);
 
 			if (data.error)
@@ -213,7 +223,8 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 			if (response.status() === 409) {
 				const data = await parseJsonSafely(response);
 
-				if (data.error !== undefined) expect(String(data.error).length).toBeGreaterThan(0);
+				if (data.error !== undefined)
+					expect(String(data.error).length).toBeGreaterThan(0);
 			}
 		});
 	});
@@ -241,4 +252,3 @@ expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 42
 		});
 	});
 });
-

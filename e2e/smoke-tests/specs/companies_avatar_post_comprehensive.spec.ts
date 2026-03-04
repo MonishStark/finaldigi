@@ -29,7 +29,13 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 	test.beforeAll(async ({ request }) => {
 		// Create dummy image file for testing
 		if (!fs.existsSync(testImagePath)) {
-			fs.writeFileSync(testImagePath, Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64"));
+			fs.writeFileSync(
+				testImagePath,
+				Buffer.from(
+					"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+					"base64",
+				),
+			);
 		}
 
 		// Login to get access token
@@ -47,7 +53,10 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 		}
 
 		const loginData = await loginResponse.json();
-		const token = loginData.accessToken || loginData.user?.auth?.accessToken || loginData.token;
+		const token =
+			loginData.accessToken ||
+			loginData.user?.auth?.accessToken ||
+			loginData.token;
 
 		if (!token) {
 			return;
@@ -84,14 +93,17 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 			const body = await parseJsonSafe(response);
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
-			if (body.message !== undefined) expect(typeof body.message).toBe("string");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
+			if (body.message !== undefined)
+				expect(typeof body.message).toBe("string");
 			if (body.companyLogo !== undefined) {
 				expect(typeof body.companyLogo).toBe("string");
 				expect(body.companyLogo.length).toBeGreaterThan(0);
@@ -117,14 +129,17 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 200) return;
 			const body = await parseJsonSafe(response);
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
-			if (body.companyLogo !== undefined) expect(typeof body.companyLogo).toBe("string");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
+			if (body.companyLogo !== undefined)
+				expect(typeof body.companyLogo).toBe("string");
 		});
 	});
 
@@ -147,15 +162,18 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const body = await parseJsonSafe(response);
 			if (response.status() !== 400) return;
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
-			if (body.message !== undefined) expect(typeof body.message).toBe("string");
+			if (body.message !== undefined)
+				expect(typeof body.message).toBe("string");
 		});
 
 		test("should return 400 when invalid companyId in path", async ({
@@ -177,13 +195,15 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const body = await parseJsonSafe(response);
 			if (response.status() !== 400) return;
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
 		});
 	});
@@ -210,15 +230,18 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const body = await parseJsonSafe(response);
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
-			if (body.message !== undefined) expect(typeof body.message).toBe("string");
+			if (body.message !== undefined)
+				expect(typeof body.message).toBe("string");
 			if (Array.isArray(body.details) && body.details.length > 0) {
 				expect(body.details[0]?.field).toBeTruthy();
 			}
@@ -241,15 +264,18 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			if (response.status() !== 401) return;
 			const body = await parseJsonSafe(response);
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
-			if (body.message !== undefined) expect(typeof body.message).toBe("string");
+			if (body.message !== undefined)
+				expect(typeof body.message).toBe("string");
 		});
 
 		test("should return 401 when access token expired", async ({ request }) => {
@@ -289,9 +315,11 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 
 			if (response.status() === 403) {
 				const body = await parseJsonSafe(response);
-				if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+				if (body.success !== undefined)
+					expect(typeof body.success).toBe("boolean");
 				if (body.error !== undefined) expect(typeof body.error).toBe("string");
-				if (body.message !== undefined) expect(typeof body.message).toBe("string");
+				if (body.message !== undefined)
+					expect(typeof body.message).toBe("string");
 			}
 		});
 	});
@@ -320,9 +348,10 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const body = await parseJsonSafe(response);
 			if (response.status() !== 404) return;
 
@@ -343,15 +372,18 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				`${API_BASE_URL}/companies/${testCompanyId}/avatar`,
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const body = await parseJsonSafe(response);
 			if (response.status() !== 405) return;
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
-			if (body.message !== undefined) expect(typeof body.message).toBe("string");
+			if (body.message !== undefined)
+				expect(typeof body.message).toBe("string");
 		});
 
 		test("should return 405 for PATCH request", async ({ request }) => {
@@ -367,13 +399,15 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				},
 			);
 
-			expect([200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409, 422, 429, 500, 502, 503]).toContain(
-				response.status(),
-			);
+			expect([
+				200, 201, 202, 204, 301, 302, 304, 400, 401, 403, 404, 405, 408, 409,
+				422, 429, 500, 502, 503,
+			]).toContain(response.status());
 			const body = await parseJsonSafe(response);
 			if (response.status() !== 405) return;
 
-			if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
+			if (body.success !== undefined)
+				expect(typeof body.success).toBe("boolean");
 			if (body.error !== undefined) expect(typeof body.error).toBe("string");
 		});
 	});
@@ -432,11 +466,13 @@ test.describe("POST /companies/{companyId}/avatar - Comprehensive Tests", () => 
 				const body = await parseJsonSafe(response);
 
 				// Verify structure
-				if (body.success !== undefined) expect(typeof body.success).toBe("boolean");
-				if (body.message !== undefined) expect(typeof body.message).toBe("string");
-				if (body.companyLogo !== undefined) expect(typeof body.companyLogo).toBe("string");
+				if (body.success !== undefined)
+					expect(typeof body.success).toBe("boolean");
+				if (body.message !== undefined)
+					expect(typeof body.message).toBe("string");
+				if (body.companyLogo !== undefined)
+					expect(typeof body.companyLogo).toBe("string");
 			}
 		});
 	});
 });
-
