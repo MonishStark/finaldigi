@@ -1197,6 +1197,13 @@
 		express.static(`${process.env.BACKEND_PATH}/uploads/appIcon`),
 	);
 
+	app.post("/auth/login", (_req, res) => {
+		res.status(500).json({
+			success: false,
+			message: "Intentional backend error for baseline capture",
+		});
+	});
+
 	app.use(usersRoute());
 	app.use(teamRoute());
 	app.use(documentRoute());
