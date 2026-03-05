@@ -32,18 +32,22 @@ jobs:
       TOTAL: "0"
       REPORT_AVAILABLE: "false"
       REPORT_SECTION: ""
+      GEMINI_SMOKE_RUN_LEVEL: ${{ secrets.GEMINI_SMOKE_RUN_LEVEL || vars.GEMINI_SMOKE_RUN_LEVEL || 'medium' }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check Gemini bot for High/Critical issues
+      - name: Check Gemini bot for configured severity gate
         id: gemini_gate
         uses: actions/github-script@v7
         with:
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
+            const configuredModeRaw = String(process.env.GEMINI_SMOKE_RUN_LEVEL || 'medium').toLowerCase().trim();
+            const validModes = new Set(['all', 'low', 'medium', 'high', 'critical', 'none']);
+            const configuredMode = validModes.has(configuredModeRaw) ? configuredModeRaw : 'medium';
             const issue_number = context.payload.pull_request?.number;
             if (!issue_number) {
               core.setOutput('block', 'false');
@@ -58,9 +62,25 @@ jobs:
 
             const codeReviewRegex = /^(?:#{1,3}\s*)?code\s+review\b/im;
             const severityLabelRegex = /\b(security\s+(critical|high|medium|low)|(critical|high|medium|low)\s*priority)\b|\[(critical|high|medium|low)\]/i;
-
-            const highCriticalRegex = /\b(security\s+(critical|high)|critical|high\s*priority)\b/i;
             const severeVulnRegex = /(remote\s+code\s+execution|\brce\b|arbitrary\s+code\s+execution|command\s+injection|sql\s+injection)/i;
+
+            const detectSeverity = (line) => {
+              const text = String(line || '').toLowerCase();
+              if (/\b(security\s+critical|critical\s*priority|\[critical\]|\bcritical\b)\b/i.test(text)) return 'critical';
+              if (/\b(security\s+high|high\s*priority|\[high\]|\bhigh\b)\b/i.test(text)) return 'high';
+              if (/\b(security\s+medium|medium\s*priority|\[medium\]|\bmedium\b)\b/i.test(text)) return 'medium';
+              if (/\b(security\s+low|low\s*priority|\[low\]|\blow\b)\b/i.test(text)) return 'low';
+              return null;
+            };
+
+            const shouldBlockForMode = (counts, mode) => {
+              if (mode === 'all') return counts.total > 0;
+              if (mode === 'low') return (counts.critical + counts.high + counts.medium) > 0;
+              if (mode === 'medium') return (counts.critical + counts.high) > 0;
+              if (mode === 'high') return counts.critical > 0;
+              if (mode === 'critical' || mode === 'none') return false;
+              return (counts.critical + counts.high) > 0;
+            };
 
             const isGeminiAuthor = (login) => (login || '').toLowerCase().includes('gemini-code-assist');
 
@@ -214,7 +234,7 @@ jobs:
               core.setOutput('block', 'true');
               core.setOutput(
                 'summary',
-                `Gemini Code Review with severity labels did not arrive within ${Math.round(maxWaitSeconds / 60)} minutes. Playwright was not executed to avoid false "no issues" run.`
+                `Gemini Code Review with severity labels did not arrive within ${Math.round(maxWaitSeconds / 60)} minutes. Playwright was not executed to avoid false "no issues" run. Gate mode: ${configuredMode}.`
               );
               core.setOutput('details', '');
               return;
@@ -236,21 +256,35 @@ jobs:
             for (const body of allBodies) {
               const lines = String(body).split(/\r?\n/);
               for (const line of lines) {
-                if (highCriticalRegex.test(line) || severeVulnRegex.test(line)) {
-                  const trimmed = line.trim();
-                  if (!trimmed) continue;
-                  const normalized = normalizeFinding(trimmed);
-                  if (!normalized || seenFindings.has(normalized)) continue;
-                  seenFindings.add(normalized);
-                  findings.push(trimmed.slice(0, 300));
-                }
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+                const explicitSeverity = detectSeverity(trimmed);
+                const inferredSeverity = explicitSeverity || (severeVulnRegex.test(trimmed) ? 'critical' : null);
+                if (!inferredSeverity) continue;
+
+                const normalized = `${inferredSeverity}:${normalizeFinding(trimmed)}`;
+                if (!normalized || seenFindings.has(normalized)) continue;
+                seenFindings.add(normalized);
+                findings.push({ severity: inferredSeverity, text: trimmed.slice(0, 300) });
               }
             }
 
+            const counts = findings.reduce(
+              (acc, f) => {
+                acc[f.severity] += 1;
+                acc.total += 1;
+                return acc;
+              },
+              { critical: 0, high: 0, medium: 0, low: 0, total: 0 }
+            );
+
+            const block = shouldBlockForMode(counts, configuredMode);
             const unique = findings.slice(0, 25);
-            const block = unique.length > 0;
+            const summaryHeader = `Gate mode: ${configuredMode} | Findings: critical=${counts.critical}, high=${counts.high}, medium=${counts.medium}, low=${counts.low}, total=${counts.total}`;
+            const summaryFindings = unique.map((f) => `[${f.severity.toUpperCase()}] ${f.text}`).join('\n');
+
             core.setOutput('block', block ? 'true' : 'false');
-            core.setOutput('summary', unique.join('\n'));
+            core.setOutput('summary', summaryFindings ? `${summaryHeader}\n${summaryFindings}` : `${summaryHeader}\nNo Gemini findings detected.`);
 
       - name: Prepare Blocked Email Report
         if: steps.gemini_gate.outputs.block == 'true'
@@ -262,15 +296,15 @@ jobs:
             echo "REPORT_SECTION<<EOF"
             echo "🔐 Gemini Gate Status: ✗ BLOCKED"
             echo ""
-            echo "Critical Issues Detected:"
+            echo "Issues above configured gate level detected:"
             printf '%s\n' "$GEMINI_SUMMARY"
             echo ""
             echo "⚠️ Action Required:"
-            echo "Please fix the High/Critical security issues before Playwright tests can run."
+            echo "Please reduce severity findings per gate policy before Playwright tests can run."
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      - name: Notify - Playwright skipped (Gemini High/Critical)
+      - name: Notify - Playwright skipped (Gemini gate)
         if: steps.gemini_gate.outputs.block == 'true'
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
@@ -279,7 +313,7 @@ jobs:
           server_port: 465
           username: ${{ secrets.REPORT_FROM_MAIL }}
           password: ${{ secrets.REPORT_FROM_PASSWORD }}
-          subject: "DigiBot - QA Automation BLOCKED: Gemini High/Critical Issues - PR #${{ github.event.pull_request.number }}"
+          subject: "DigiBot - QA Automation BLOCKED: Gemini Gate Policy - PR #${{ github.event.pull_request.number }}"
           to: ${{ secrets.REPORT_TO_MAILS }}
           from: "QA Automation Bot"
           body: |
@@ -288,11 +322,11 @@ jobs:
             PR: #${{ github.event.pull_request.number }}
 
             SUMMARY:
-            ⚠️ Tests NOT executed due to High/Critical security issues
+            ⚠️ Tests NOT executed due to configured Gemini severity gate
 
             ${{ env.REPORT_SECTION }}
 
-      - name: Stop workflow due to High/Critical issues
+      - name: Stop workflow due to Gemini gate
         if: steps.gemini_gate.outputs.block == 'true'
         run: |
           echo "Blocking issues reported by Gemini bot; skipping Playwright." >&2
@@ -307,7 +341,7 @@ jobs:
           {
             echo "REPORT_SECTION<<EOF"
             echo "🔐 Gemini Gate Status: ✓ Passed"
-            echo "No High/Critical security issues detected."
+            echo "No Gemini findings above configured gate threshold."
             echo ""
             echo "⚙️ Playwright smoke tests are now running..."
             echo ""
@@ -315,7 +349,7 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_ENV"
 
-      - name: Notify - No High/Critical issues (Playwright starting)
+      - name: Notify - Gemini gate passed (Playwright starting)
         if: steps.gemini_gate.outputs.block != 'true'
         continue-on-error: true
         uses: dawidd6/action-send-mail@v3
